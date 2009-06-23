@@ -23,6 +23,6 @@ abstract class PluginmgI18nCatalogue extends BasemgI18nCatalogue
   public function getLanguage()
   {
     
-    return substr($this->getName(), -2);
+    return substr($this->getName(), strrpos($this->getName(), '.') + 1);
   }
 }

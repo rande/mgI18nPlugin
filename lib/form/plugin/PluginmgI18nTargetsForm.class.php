@@ -28,10 +28,15 @@ class PluginmgI18nTargetsForm extends sfForm
       'source'    => new sfValidatorString(array('required' => true)),
       'targets'   => new sfValidatorPass()
     ));
-
-
+    
   }
 
+  // we don't use this feature for now, the action should not be called in production
+  public function addCSRFProtection($CSRFSecret)
+  {
+    
+  }
+  
   public function save()
   {
     $cultures = sfConfig::get('app_mgI18nPlugin_cultures_available');

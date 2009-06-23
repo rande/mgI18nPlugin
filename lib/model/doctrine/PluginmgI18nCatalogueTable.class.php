@@ -39,6 +39,8 @@ class PluginmgI18nCatalogueTable extends Doctrine_Table
       $catalogue->save();
     }
     
+    $time = strtotime('now');
+    
     $trans_unit = new mgI18nTransUnit;
     $trans_unit->setCatId($catalogue->getCatId());
     $trans_unit->setSource($source);

@@ -70,20 +70,7 @@ class basemgI18nAdminActions extends sfActions
   
   public function executeDisplayAjaxMessages()
   {
-    // Récupère un chef
-    $this->chef = Doctrine::getTable('Chef')->createQuery('c')
-      ->fetchOne();
-      
-    // Récupère une adresse
-    $this->mappable = Doctrine::getTable('MappableObject')->createQuery('mo')
-      ->fetchOne();
-      
-    // Récupère une recette
-    $this->recipe = Doctrine::getTable('Recipe')->createQuery('r')
-      ->fetchOne();
-      
-    // Récupère les widgets
-    $this->widgets = Doctrine::getTable('Widget')->findAll();
+    // OVERWRITE THIS METHOD IN YOUR MAIN APPLICATION
   }
   
   public function executeUpdateTargets($request)
