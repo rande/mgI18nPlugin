@@ -63,9 +63,7 @@ class basemgI18nAdminActions extends sfActions
        $json['_mg_i18n_target_'.$code] = '';
     }
     
-    echo json_encode($json);
-    
-    return sfView::NONE;
+    return $this->renderText(json_encode($json));
   }
   
   public function executeDisplayAjaxMessages()

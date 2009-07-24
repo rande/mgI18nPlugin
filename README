@@ -42,13 +42,22 @@ Installation
         all:
           # ...
           mgI18nPlugin:
-            connection: doctrine # default is mg_i18n_plugin
-            culture_available: 
+            connection: mg_i18n_plugin # symfony's default is 'doctrine'
+            cultures_available: 
               fr: Français
               en: English
 
  * enable the mgI18nAdmin module from your backend application
 
+ * rebuild your model
+        [php]
+        ./symfony doctrine:build-all-reload
+ 
+ * publish plugin asset
+ 
+        [php]
+        ./symfony plugin:publish-assets
+ 
 Note
 ----
 
