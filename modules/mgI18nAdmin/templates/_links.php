@@ -9,16 +9,7 @@
  * file that was distributed with this source code.
  */
 ?>
-
-<?php include_partial('links') ?>
-
-
-<h1>Ajax Messages</h1>
-
-<h2>YOUR_CATALOGUE</h2>
-<table>
-  <tr>
-    <td>MESSAGE_SOURCE</td>
-    <td><?php echo __('MESSAGE_SOURCE', null, 'YOUR_CATALOGUE')?></td> 
-  </tr>
-</table>
+<ul>
+  <li><?php echo link_to(__('link_parse_action_files', null, 'i18n'), 'mgI18nAdmin/parseActionFiles') ?></li>
+  <li><?php echo link_to(__('link_display_ajax_message', null, 'i18n'), 'mgI18nAdmin/displayAjaxMessages') ?></li>
+</ul>

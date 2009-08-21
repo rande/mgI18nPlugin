@@ -11,7 +11,7 @@
 
 class basemgI18nAdminActions extends sfActions
 {
- public function executeIndex($request)
+ public function executeIndex(sfWebRequest $request)
   {
     $this->i18n_trans_unitList = new mgI18NDatagrid(
       $request->getParameter('filters', array()), 
@@ -22,7 +22,7 @@ class basemgI18nAdminActions extends sfActions
     ); 
   }
 
-  public function executeGetTargets($request)
+  public function executeGetTargets(sfWebRequest $request)
   {
     $catalogue = $request->getParameter('catalogue');
     $source    = $request->getParameter('source');
@@ -66,12 +66,12 @@ class basemgI18nAdminActions extends sfActions
     return $this->renderText(json_encode($json));
   }
   
-  public function executeDisplayAjaxMessages()
+  public function executeDisplayAjaxMessages(sfWebRequest $request)
   {
     // OVERWRITE THIS METHOD IN YOUR MAIN APPLICATION
   }
   
-  public function executeUpdateTargets($request)
+  public function executeUpdateTargets(sfWebRequest $request)
   {
     
     $catalogue = $request->getParameter('catalogue');
@@ -95,20 +95,82 @@ class basemgI18nAdminActions extends sfActions
     return sfView::NONE;
     
   }
-  
-  public function executeCreate()
+
+  public function executeParseActionFiles(sfWebRequest $request)
+  {
+
+    $app_dir = sfConfig::get('sf_app_dir');
+
+    $files = sfFinder::type('file')->ignore_version_control()->name('*actions.class.php')->in($app_dir);
+
+    $all_results = array();
+    
+    foreach($files as $file)
+    {
+      $lines = file($file);
+
+      $phrases = array();
+
+      $ereg = "/(.*)__\(([^\)]*)\)(.*)/";
+      foreach($lines as $line)
+      {
+        if(preg_match($ereg, $line, $results))
+        {
+          $params = explode(',', $results[2]);
+
+          // $phrase = ''tototo'' or '"tototo"'
+          
+          if(count($params) < 3)
+          {
+            // something is wrong
+            $error     = true;
+            $phrase    = false;
+            $catalogue = false;
+          }
+          else
+          {
+            $phrase    = substr(trim($params[0]), 1, -1);
+            $catalogue = substr(trim($params[2]), 1, -1);
+            $error     = false;
+          }
+          
+          
+
+          $phrases[] = array(
+            'phrase'    => $phrase,
+            'catalogue' => $catalogue,
+            'line'      => $line,
+            'error'     => $error,
+          );
+        }
+        
+      }
+
+      if(count($phrases) == 0)
+      {
+        continue;
+      }
+
+      $all_results[$file] = $phrases;
+    }
+
+    $this->all_results = $all_results;
+    
+  }
+
+  public function executeCreate(sfWebRequest $request)
   {
     $this->form = new mgI18nTransUnitForm();
 
     $this->setTemplate('edit');
   }
 
-  public function executeEdit($request)
+  public function executeEdit(sfWebRequest $request)
   {
     $this->form = $this->geti18nTransUnitForm($request->getParameter('msg_id'));
   }
 
-  public function executeUpdate($request)
+  public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post'));
 
@@ -126,7 +188,7 @@ class basemgI18nAdminActions extends sfActions
     $this->setTemplate('edit');
   }
 
-  public function executeDelete($request)
+  public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($i18n_trans_unit = $this->geti18nTransUnitById($request->getParameter('msg_id')));
 
