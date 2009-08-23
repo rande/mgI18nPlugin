@@ -101,63 +101,35 @@ class basemgI18nAdminActions extends sfActions
 
     $app_dir = sfConfig::get('sf_app_dir');
 
-    $files = sfFinder::type('file')->ignore_version_control()->name('*actions.class.php')->in($app_dir);
+    $files = sfFinder::type('file')
+      ->ignore_version_control()
+      ->name('*actions.class.php')
+      ->in($app_dir);
 
-    $all_results = array();
-    
-    foreach($files as $file)
-    {
-      $lines = file($file);
+    $parser = new mgI18nFileParser();
 
-      $phrases = array();
-
-      $ereg = "/(.*)__\(([^\)]*)\)(.*)/";
-      foreach($lines as $line)
-      {
-        if(preg_match($ereg, $line, $results))
-        {
-          $params = explode(',', $results[2]);
-
-          // $phrase = ''tototo'' or '"tototo"'
-          
-          if(count($params) < 3)
-          {
-            // something is wrong
-            $error     = true;
-            $phrase    = false;
-            $catalogue = false;
-          }
-          else
-          {
-            $phrase    = substr(trim($params[0]), 1, -1);
-            $catalogue = substr(trim($params[2]), 1, -1);
-            $error     = false;
-          }
-          
-          
-
-          $phrases[] = array(
-            'phrase'    => $phrase,
-            'catalogue' => $catalogue,
-            'line'      => $line,
-            'error'     => $error,
-          );
-        }
-        
-      }
-
-      if(count($phrases) == 0)
-      {
-        continue;
-      }
-
-      $all_results[$file] = $phrases;
-    }
-
-    $this->all_results = $all_results;
+    $this->all_results = $parser->parseFiles($files);
     
   }
 
+   public function executeParseLibFiles(sfWebRequest $request)
+  {
+
+    $lib_dir = sfConfig::get('sf_lib_dir');
+
+    $files = sfFinder::type('file')
+      ->ignore_version_control()
+      ->discard('lib/vendor')
+      ->name('*.class.php')
+      ->in($lib_dir);
+
+    $parser = new mgI18nFileParser();
+    
+
+    $this->all_results = $parser->parseFiles($files);
+
+  }
+  
   public function executeCreate(sfWebRequest $request)
   {
     $this->form = new mgI18nTransUnitForm();

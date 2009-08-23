@@ -11,5 +11,6 @@
 ?>
 <ul>
   <li><?php echo link_to(__('link_parse_action_files', null, 'i18n'), 'mgI18nAdmin/parseActionFiles') ?></li>
+  <li><?php echo link_to(__('link_parse_lib_files', null, 'i18n'), 'mgI18nAdmin/parseLibFiles') ?></li>
   <li><?php echo link_to(__('link_display_ajax_message', null, 'i18n'), 'mgI18nAdmin/displayAjaxMessages') ?></li>
 </ul>
