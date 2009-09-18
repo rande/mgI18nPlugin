@@ -14,16 +14,12 @@
  * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
  * @version    SVN: $Id$
  */
-include_once sfConfig::get('sf_plugins_dir').'/mgI18nPlugin/modules/mgI18nAdmin/lib/basemgI18nAdminActions.class.php';
-
-/**
- * widgets actions.
- *
- * @package    mgI18nPlugin
- * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
- * @version    SVN: $Id$
- */
-class mgI18nAdminActions extends basemgI18nAdminActions
+class mgI18nAdminComponents extends sfComponents
 {
+
+  public function executeDisplayTranslationBox()
+  {
+
+  }
 
 }

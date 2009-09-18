@@ -3,13 +3,16 @@
  * This file is part of the mgWidgetsPlugin package.
  * (c) 2008 MenuGourmet 
  *
- * Author : Thomas Rabaix <thomas.rabaix@soleoweb.com>
- * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-
+/**
+ *
+ * @package    mgI18nPlugin
+ * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
+ * @version    SVN: $Id$
+ */
 class sfMessageSource_mgMySQL extends sfMessageSource_MySQL
 {
   protected $application = null;

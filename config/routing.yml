@@ -1,0 +1,12 @@
+mg_i18n_update:
+  url: /mg-i18n-plugin/update-targets
+  param: { module: mgI18nAdmin, action: updateTargets}
+
+mg_i18n_get_targets:
+  url: /mg-i18n-plugin/get-targets
+  param: { module: mgI18nAdmin, action: getTargets}
+
+mg_i18n_get_messages:
+  url: /mg-i18n-plugin/get-messages/:type
+  param: { module: mgI18nAdmin, action: getMessagesByType}
+

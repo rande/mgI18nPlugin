@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<xliff version="1.0">
+  <file orginal="global" source-language="en_EN" datatype="plaintext">
+    <body>
+
+      <trans-unit id="1">
+        <source>title_translation</source>
+        <target>Traduction</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_page</source>
+        <target>Page</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_application</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_lib</source>
+        <target>Libraries</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_ajax</source>
+        <target>Ajax</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_help</source>
+        <target>Aide</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_hide_translated_page</source>
+        <target>Masquer les messages traduits</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_filter_list</source>
+        <target>Filtrer : </target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_catalogue</source>
+        <target>Catalogue</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_targets</source>
+        <target>Message</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_parameters</source>
+        <target>Parametres</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>btn_save_translation</source>
+        <target>Sauvegarder</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>legend_translations</source>
+        <target>Traductions disponibles</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>message_instruction</source>
+        <target>
+          <![CDATA[
+          1. Click on one item on the left table to see its current translations. <br />
+          2. Then you are free to edit the different translations to meet your requirements. <br />
+          3. <strong>save your translations !</strong>
+          ]]>
+        </target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>message_loading</source>
+        <target>
+           <![CDATA[
+          Chargement en cours, cela peut prendre du temps <br />
+          <em>(20s si le projet est important)</em>
+          ]]>
+        </target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

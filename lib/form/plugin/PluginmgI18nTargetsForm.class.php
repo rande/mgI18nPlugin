@@ -2,13 +2,19 @@
 /*
  * This file is part of the mgWidgetsPlugin package.
  * (c) 2008 MenuGourmet 
- *
- * Author : Thomas Rabaix <thomas.rabaix@soleoweb.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+
+/**
+ *
+ *
+ * @package    mgI18nPlugin
+ * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
+ * @version    SVN: $Id$
+ */
 class PluginmgI18nTargetsForm extends sfForm
 {
 
@@ -65,18 +71,16 @@ class PluginmgI18nTargetsForm extends sfForm
       
       $trans_unit->setTarget($targets[$culture]);
       $trans_unit->save();
-      
-      $tc->clearCache($this->getValue('catalogue').'.'.$culture, $culture);
-      
+
       unset($cultures[$culture]);
     }
     
     foreach($cultures as $code => $name)
     {
       $tc->addMessage($this->getValue('catalogue').'.'.$code, $this->getValue('source'), $targets[$code]);
-      $tc->clearCache($this->getValue('catalogue').'.'.$code, $code);
     }
-    
+
+    return true;
   }
 }
 

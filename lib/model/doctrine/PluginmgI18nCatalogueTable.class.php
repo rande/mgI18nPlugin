@@ -3,30 +3,20 @@
  * This file is part of the mgWidgetsPlugin package.
  * (c) 2008 MenuGourmet 
  *
- * Author : Thomas Rabaix <thomas.rabaix@soleoweb.com>
- * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 
+/**
+ *
+ *
+ * @package    mgI18nPlugin
+ * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
+ * @version    SVN: $Id$
+ */
 class PluginmgI18nCatalogueTable extends Doctrine_Table
 {
-
-  public function clearCache($variant, $language)
-  {
-    // 2 folders due to dimension
-    $globs = array(
-      sfConfig::get('sf_cache_dir').'/*/*/*/i18n/'.$variant.'/'.$language.'.cache',
-      sfConfig::get('sf_cache_dir').'/*/*/i18n/'.$variant.'/'.$language.'.cache', 
-    );
-    
-
-    foreach($globs as $glob) 
-    {
-      sfToolkit::clearGlob($glob);
-    }
-  }
   
   public function addMessage($name_catalogue, $source, $target)
   {

@@ -1,14 +1,21 @@
 <?php
 /*
  * This file is part of the mgWidgetsPlugin package.
- * (c) 2008 MenuGourmet 
+ * (c) 2008 MenuGourmet
+ * (c) 2009 Thomas Rabaix <thomas.rabaix@soleoweb.com>
  *
- * Author : Thomas Rabaix <thomas.rabaix@soleoweb.com>
- * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+
+/**
+ *
+ * 
+ * @package    mgI18nPlugin
+ * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
+ * @version    SVN: $Id$
+ */
 class mgI18N extends sfI18N
 {
 
@@ -16,7 +23,13 @@ class mgI18N extends sfI18N
     $requested_messages = array(),
     $to_analyse = array();
 
-  
+
+  public function initialize(sfApplicationConfiguration $configuration, sfCache $cache = null, $options = array())
+  {
+    parent::initialize($configuration, $cache, $options);
+
+    $this->configuration->loadHelpers(array('Text'));
+  }
   /**
    * Gets the translation for the given string
    *
@@ -56,7 +69,7 @@ class mgI18N extends sfI18N
       $params = implode(', ', array_keys($args));
     }
     
-    if(sfConfig::get('sf_web_debug'))
+    if(sfConfig::get('mg_i18n_enabled'))
     {
       
       if(!array_key_exists($catalogue, $this->requested_messages))
@@ -64,7 +77,13 @@ class mgI18N extends sfI18N
         $this->requested_messages[$catalogue] = array();
       }
       
-      $value = array('source' => $string, 'target' => $message, 'params' => $params);
+      $value = array(
+        'source' => $string,
+        'target' => truncate_text($message, 70),
+        'params' => $params,
+        'is_translated' =>  $string != $message
+      );
+      
       $this->requested_messages[$catalogue][md5($string)] = $value;
     }
 

@@ -1,15 +1,15 @@
 mgI18nPlugin
 ============
 
-This plugin add an extra option "Translation" in the debug web panel. This panel allow the user to update the translation on the current page.
+This plugin add an extra option "Translation" in the debug web panel. This panel
+allow the user to update the translation on the current page.
 
 Requirements
 ------------
 
 * symfony 1.2
-* doctrine 
+* doctrine 1.0
 * jQuery
-* swToolboxPlugin (http://www.symfony-project.org/plugins/swToolboxPlugin)
 
 Installation
 ------------
@@ -23,7 +23,7 @@ Installation
             class: mgI18N
             param:
               source:               mgMySQL
-              database:             mysql://user:password@127.0.0.1/database_i18n
+              database:             mysql://user:password@127.0.0.1/project_database_i18n
               encoding:             utf8
               debug:                off
               untranslated_prefix:  "[T]"
@@ -42,22 +42,108 @@ Installation
         all:
           # ...
           mgI18nPlugin:
-            connection: mg_i18n_plugin # symfony's default is 'doctrine'
+            connection: doctrine
             cultures_available: 
               fr: Français
               en: English
 
- * enable the mgI18nAdmin module from your backend application
+   you can use 2 databases : a project database and a translation database. Separating
+   databases help you to manage different staging.
+
+ * (optional) edit the databases.yml file to add the mg_i18n_plugin connection.
+
+        [yml]
+        mg_i18n_plugin:
+          class: sfDoctrineDatabase
+          param:
+            dsn: 'mysql:host=127.0.0.1;dbname=project_database_i18n;charset=utf-8'
+            username: username
+            password: password
 
  * rebuild your model
+
         [php]
         ./symfony doctrine:build-all-reload
- 
+
+ * Install jQuery, 2 options
+
+    * update the view.yml
+
+            [yml]
+            javascripts:
+              - http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js
+              - http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js
+
+            stylesheets:
+              - http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/redmond/jquery-ui.css
+
+   * or manage your way ;)
+
  * publish plugin asset
  
         [php]
         ./symfony plugin:publish-assets
- 
+
+ * install plugin translation for each application
+
+        ./symfony mgI18n:xliff-import frontend plugins/mgI18nPlugin/i18n/*
+        ./symfony mgI18n:xliff-import backend plugins/mgI18nPlugin/i18n/*
+
+
+ * edit your layout.php and add this code
+
+        [php]
+        <?php if(sfConfig::get('mg_i18n_enabled')): ?>
+          <?php include_component('mgI18nAdmin', 'displayTranslationBox') ?>
+        <?php endif;?>
+
+
+ * clear cache
+
+        ./symfony cc
+
+
+Security
+--------
+
+By default the translation panel appears only if the current user is a sfGuard's
+super admin. This behavior is controlled by the mgI18nUser class. Copy-and-paste
+this class into the project|application lib folder and customize the logic
+depends on the specification.
+
+    [php]
+    /**
+     * Copy-and-paste this class into the project|application lib folder and
+     * customize the logic depends on the specification.
+     *
+     * @package    mgI18nPlugin
+     * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
+     * @version    SVN: $Id$
+     */
+    class mgI18nUser
+    {
+
+      /**
+       * return true or false if the current user can use the translation tools
+       *
+       * @param sfContext $context
+       * @return boolean
+       */
+      public static function canTranslate(sfContext $context)
+      {
+        $sf_user = $context->getUser();
+
+        if($sf_user instanceof sfGuardSecurityUser)
+        {
+
+          return $sf_user->isSuperAdmin();
+        }
+
+        return false;
+      }
+    }
+
+
 Note
 ----
 

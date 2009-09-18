@@ -1,0 +1,18 @@
+<?php
+
+echo __("message_1", array());
+
+echo __("message_wo_catalogue_with_params", array("toto" => 'toto'));
+
+echo __("message_2", null, 'catalogue_1');
+
+echo __("message_w_catalogue_with_params", array("toto" => 'toto'), 'catalogue_2');
+
+
+echo __(<<<DOC
+here_doc_message
+
+lipsum bloom !!
+
+DOC
+, null, 'catalogue_3');
