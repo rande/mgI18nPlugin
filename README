@@ -89,6 +89,13 @@ Installation
         ./symfony mgI18n:xliff-import frontend plugins/mgI18nPlugin/i18n/*
         ./symfony mgI18n:xliff-import backend plugins/mgI18nPlugin/i18n/*
 
+ * add the filter, edit the filters.yml (the filter add current page translation messages)
+
+        [yml]
+        i18n:
+          class: mgI18nFilter
+
+        common:    ~ # before the common filter
 
  * edit your layout.php and add this code
 
