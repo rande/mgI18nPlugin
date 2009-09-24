@@ -84,11 +84,9 @@ class basemgI18nAdminActions extends sfActions
     {
       $form->save();
 
-      if($this->context->getI18n()->getCache())
-      {
-        // empty the i18n cache
-        $this->context->getI18n()->getCache()->clean();
-      }
+      chdir(sfConfig::get('sf_root_dir'));
+      $cc = new sfCacheClearTask($this->getContext()->getEventDispatcher(), new sfFormatter);
+      $cc->run(array(), array('--type=i18n'));
     }
     
     return sfView::NONE;
