@@ -183,7 +183,7 @@ class basemgI18nAdminActions extends sfActions
       $hash = md5($message['message']);
       $valid_messages[$catalogue][$hash] = array(
         'source' => $message['message'],
-        'target' => truncate_text(__($message['message'], null, $original_catalogue), 70),
+        'target' => htmlentities(truncate_text(__($message['message'], null, $original_catalogue), 70)),
         'params' => isset($message['params']) ? $message['params'] : array(), // not fully implemented yet,
         'is_translated' => $message['message'] != __($message['message'], null, $original_catalogue)
       );

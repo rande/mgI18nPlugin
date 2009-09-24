@@ -79,7 +79,7 @@ class mgI18N extends sfI18N
       
       $value = array(
         'source' => $string,
-        'target' => truncate_text($message, 70),
+        'target' => htmlentities(truncate_text($message, 70)),
         'params' => $params,
         'is_translated' =>  $string != $message
       );
