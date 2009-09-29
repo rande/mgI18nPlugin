@@ -26,6 +26,11 @@ class mgI18nFilter extends sfFilter
     // execute next filter
     $filterChain->execute();
 
+    if(!sfConfig::get('mg_i18n_enabled', false))
+    {
+      
+      return;
+    }
     // execute this filter only once
     $response = $this->context->getResponse();
 
