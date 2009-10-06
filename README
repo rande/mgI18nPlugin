@@ -110,6 +110,56 @@ Installation
         ./symfony cc
 
 
+Registering Event
+-----------------
+
+In some edge cases, the plugin might not find the translation. The current fallback
+is to register to an event, and add the translation into an array.
+
+
+ * connect to the event
+
+        [php]
+        class ProjectConfiguration extends sfProjectConfiguration
+        {
+          public function setup()
+          {
+            $this->enableAllPluginsExcept(array(
+             'sfPropelPlugin',
+             'sfCompat10Plugin'
+            ));
+
+            // [...]
+            $this->dispatcher->connect('mgI18nPlugin.assign_ajax_values', array('mgI18nAjaxTranslation', 'listenToEvent'));
+          }
+        }
+
+ * Create a class `mgI18nAjaxTranslation`
+
+        [php]
+        class mgI18nAjaxTranslation extends mgI18nMessageHelper
+        {
+
+          public static function listenToEvent(sfEvent $event, $i18n_messages)
+          {
+
+            $messages = array(
+              'your-catalogue' => array(
+                array('your_message', array('name_param1', 'name_param2'),
+              ),
+            );
+
+            return self::appendMessages($i18n_messages, $messages);
+          }
+        }
+
+ * Now these messages will appear on the AJAX tabs
+
+
+Of course you can connect many different objects to the `mgI18nPlugin.assign_ajax_values`
+event, from modules to plugins.
+
+
 Security
 --------
 
