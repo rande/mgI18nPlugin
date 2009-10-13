@@ -22,7 +22,7 @@ function mgI18nPlugin(options)
 
 
   this.page = {
-    loaded: true,
+    loaded: false,
     messages: {},
     panel: null
   }
@@ -189,8 +189,9 @@ mgI18nPlugin.prototype.init = function(options)
 
   jQuery('.mg-i18n-parameters').hide();
 
-  // load the translation from the current page
-  this.loadTranslationTable('page', _mg_i18n_messages);
+
+  jQuery('#mg-i18n-dialog').resizable();
+
 
   this.toggleModalState('hide');
 }
@@ -199,28 +200,30 @@ mgI18nPlugin.prototype.toggleModalState = function(mode)
 {
 
   jQuery('#mg-i18n-dialog').show();
-
+  
   if(mode == 'show')
   {
-
     jQuery('#mg-i18n-dialog')
       .fadeTo(0, 1)
-      .animate({width: '650px', heigth: '400px'}, 500)
+      .animate({width: '700px', heigth: '400px'}, 500)
       .css('zIndex', 10000)
     ;
 
     jQuery('#mg-i18n-left-box').show();
     jQuery('#mg-i18n-right-box').show();
 
+    this.loadTranslationTable('page', _mg_i18n_messages);
+    
   }
   else
   {
     jQuery('#mg-i18n-dialog').css('height', null);
-    jQuery('#mg-i18n-dialog').css('width', null);
+    jQuery('#mg-i18n-dialog').css('width', 100);
     jQuery('#mg-i18n-dialog').fadeTo(0, 0.25)
 
     jQuery('#mg-i18n-left-box').hide();
     jQuery('#mg-i18n-right-box').hide();
+    jQuery('#mg-i18n-loading-box').hide();
   }
 
 }
@@ -273,6 +276,11 @@ mgI18nPlugin.prototype.filterTranslated = function(panel, value)
 
 mgI18nPlugin.prototype.loadTranslationTable = function(name, mg_i18n_messages)
 {
+
+  if(this[name].loaded)
+  {
+    return;
+  }
 
   this[name].messages = mg_i18n_messages;
   this[name].loaded   = true;

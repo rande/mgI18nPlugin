@@ -18,87 +18,10 @@
 <!--
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" ></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" ></script>
-
-<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/redmond/jquery-ui.css" />
 -->
 
+<link rel="stylesheet" type="text/css" media="screen" href="/mgI18nPlugin/css/redmond-jquery-ui.css" />
 <script type="text/javascript" src="/mgI18nPlugin/js/gui.js" ></script>
-
-
-
-<style>
-
-  div#mg-i18n-dialog {
-    display: none;
-    position: absolute;
-    font-size: 10px;
-  }
-
-  div#mg-i18n-dialog td {
-    white-space: nowrap;
-  }
-
-  div#mg-i18n-dialog h2 {
-    padding: 2px;
-  }
-
-  input.mg-i18n-current-page-search {
-    width: 100px;
-  }
-
-  div#mg-i18n-dialog div.ui-tabs div.ui-tabs-panel {
-    padding: 0;
-  }
-
-  div.mg-i18n-container, div#mg-i18n-dialog .ui-widget {
-    font-size: 10px;
-  }
-
-  #mg-i18n-loading-box {
-    width: 650px;
-    height: 350px;
-    text-align: center;
-    line-height: 40px;
-  }
-
-  #mg-i18n-left-box {
-    float: left;
-    width: 55%;
-  }
-
-  #mg-i18n-right-box {
-    float: left;
-    width: 40%;
-  }
-
-  textarea.mg-i18n-translation-input {
-    width: 95%;
-    margin: 2%;
-    height: 45px;
-    scroll: auto;
-    padding: 2px;
-  }
-
-  div.mg-i18n-messages {
-    height: 300px;
-    overflow: scroll;
-  }
-
-  div.mg-i18n-messages td._mg_i18_td_selected {
-    background: #5B482F;
-    color: white;
-    padding: 2px;
-  }
-
-  div.mg-i18n-messages td._mg_i18_td_unselected {
-    padding: 2px;
-  }
-
-  textarea.mg-i18n-translation-input {
-    
-  }
-</style>
-
 
 <div id="mg-i18n-dialog" class="ui-widget">
   <div id="mg-i18n-on-top-box">
