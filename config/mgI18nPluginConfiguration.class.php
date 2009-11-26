@@ -29,7 +29,7 @@ class mgI18nPluginConfiguration extends sfPluginConfiguration
     
     if ($context->getI18N())
     {
-      $i18n_options = $cokontext->getI18N()->getOptions();
+      $i18n_options = $context->getI18N()->getOptions();
     }
     else
     {
