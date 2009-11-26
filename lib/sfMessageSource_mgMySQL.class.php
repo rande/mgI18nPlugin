@@ -40,7 +40,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource_MySQL
       $catalogue = 'messages';
     }
 
-    $catalogue = sfContext::getInstance()->getConfiguration()->getApplication().'.'.$catalogue;
+    $catalogue = $this->getApplicationName().'.'.$catalogue;
 
     return parent::load($catalogue);
   }
@@ -153,5 +153,11 @@ class sfMessageSource_mgMySQL extends sfMessageSource_MySQL
     }
 
     return $result;
+  }
+  
+  public function getApplicationName()
+  {
+    
+    return sfConfig::get('mg_i18n_global_application', sfContext::getInstance()->getConfiguration()->getApplication());
   }
 }

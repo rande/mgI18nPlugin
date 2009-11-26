@@ -26,6 +26,7 @@ Installation
               database:             mysql://user:password@127.0.0.1/project_database_i18n
               encoding:             utf8
               debug:                off
+              global_application: 'frontend' # Optional ; use the same translations catalogues for all applications
               untranslated_prefix:  "[T]"
               untranslated_suffix:  "[/T]"
               cache:

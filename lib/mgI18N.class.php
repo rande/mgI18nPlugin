@@ -43,7 +43,7 @@ class mgI18N extends sfI18N
   {
     $message = $this->getMessageFormat()->format($string, $args, $catalogue);
     
-    $application = $this->configuration->getApplication();
+    $application = $this->getApplicationName();
     
     $catalogue = $application.'.'.$catalogue;
 
@@ -68,7 +68,7 @@ class mgI18N extends sfI18N
     {
       $params = implode(', ', array_keys($args));
     }
-    
+
     if(sfConfig::get('mg_i18n_enabled'))
     {
       
@@ -124,4 +124,9 @@ class mgI18N extends sfI18N
     $this->to_analyse = array();
   }
 
+  public function getApplicationName()
+  {
+
+    return sfConfig::get('mg_i18n_global_application', $this->configuration->getApplication());
+  }
 }
