@@ -5,13 +5,78 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
+div#mg-i18n-dialog div, div#mg-i18n-dialog span,
+div#mg-i18n-dialog h1, div#mg-i18n-dialog h2, 
+div#mg-i18n-dialog h3, div#mg-i18n-dialog h4, 
+div#mg-i18n-dialog h5, div#mg-i18n-dialog h6, 
+div#mg-i18n-dialog p, div#mg-i18n-dialog blockquote, 
+div#mg-i18n-dialog pre, div#mg-i18n-dialog a, 
+div#mg-i18n-dialog abbr, div#mg-i18n-dialog acronym, 
+div#mg-i18n-dialog address, 
+div#mg-i18n-dialog big, div#mg-i18n-dialog cite, 
+div#mg-i18n-dialog code, div#mg-i18n-dialog del, 
+div#mg-i18n-dialog dfn, div#mg-i18n-dialog em, 
+div#mg-i18n-dialog font, div#mg-i18n-dialog img, 
+div#mg-i18n-dialog ins, div#mg-i18n-dialog kbd, 
+div#mg-i18n-dialog q, div#mg-i18n-dialog s, 
+div#mg-i18n-dialog samp, div#mg-i18n-dialog small, 
+div#mg-i18n-dialog strike, div#mg-i18n-dialog strong, 
+div#mg-i18n-dialog sub, div#mg-i18n-dialog sup, 
+div#mg-i18n-dialog tt, div#mg-i18n-dialog var,
+div#mg-i18n-dialog b, div#mg-i18n-dialog u, div#mg-i18n-dialog i, 
+div#mg-i18n-dialog center, div#mg-i18n-dialog dl, div#mg-i18n-dialog dt, div#mg-i18n-dialog dd, div#mg-i18n-dialog ol,div#mg-i18n-dialog  ul, div#mg-i18n-dialog li,
+div#mg-i18n-dialog fieldset, div#mg-i18n-dialog form, div#mg-i18n-dialog label, div#mg-i18n-dialog legend,
+div#mg-i18n-dialog table, div#mg-i18n-dialog caption, div#mg-i18n-dialog tbody, div#mg-i18n-dialog tfoot, div#mg-i18n-dialog thead, div#mg-i18n-dialog tr, div#mg-i18n-dialog th, div#mg-i18n-dialog td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+div#mg-i18n-dialog ol, div#mg-i18n-dialog ul {
+  list-style: none;
+}
+div#mg-i18n-dialog blockquote, div#mg-i18n-dialog q {
+  quotes: none;
+}
+div#mg-i18n-dialog blockquote:before, div#mg-i18n-dialog blockquote:after,
+div#mg-i18n-dialog q:before, div#mg-i18n-dialog q:after {
+  content: '';
+  content: none;
+}
+
+/* remember to define focus styles! */
+div#mg-i18n-dialog :focus {
+  outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+div#mg-i18n-dialog ins {
+  text-decoration: none;
+}
+div#mg-i18n-dialog del {
+  text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+div#mg-i18n-dialog table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
 div#mg-i18n-dialog {
+  line-height: 1;
   display: none;
   position: absolute;
   font-size: 10px;
   top: 0;
   right: 0;
+  text-align: left;
 }
 
 div#mg-i18n-dialog td {
@@ -20,6 +85,7 @@ div#mg-i18n-dialog td {
 
 div#mg-i18n-dialog h2 {
   padding: 2px;
+  width: 100%;
 }
 
 #mg-i18n-dialog input.mg-i18n-current-page-search {
