@@ -76,12 +76,30 @@ class mgI18N extends sfI18N
       {
         $this->requested_messages[$catalogue] = array();
       }
-      
+
+      if (empty($args))
+      {
+        $args = array();
+      }
+
+      // code from I18nHelper.php file
+      // replace object with strings
+      foreach ($args as $key => $value)
+      {
+        if (is_object($value) && method_exists($value, '__toString'))
+        {
+          $args[$key] = $value->__toString();
+        }
+      }
+      // end code from I18nHelper.php file
+
+      $pseudo_string = strtr($string, $args);
+
       $value = array(
         'source' => $string,
         'target' => htmlentities(truncate_text($message, 70)),
         'params' => $params,
-        'is_translated' =>  $string != $message
+        'is_translated' =>  $pseudo_string != $message
       );
       
       $this->requested_messages[$catalogue][md5($string)] = $value;
