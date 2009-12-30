@@ -116,16 +116,16 @@ class basemgI18nAdminActions extends sfActions
 
     if($type == 'lib')
     {
-      $in = sfConfig::get('sf_lib_dir');
+      $in = sfConfig::get('sf_root_dir');
       
       $finder
-        ->discard('lib/vendor')
+        ->discard('*actions.class.php')
         ->name('*.class.php')
       ;
     }
     else if($type == 'application')
     {
-      $in = sfConfig::get('sf_app_dir');
+      $in = sfConfig::get('sf_root_dir');
 
       $finder
         ->name('*actions.class.php')
