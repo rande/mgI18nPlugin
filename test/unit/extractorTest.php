@@ -3,7 +3,7 @@
 
 include(dirname(__FILE__).'/../bootstrap/unit.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 
 $phpExtractor = new mgI18nPhpExtractor();
@@ -95,3 +95,67 @@ lipsum bloom !!
 $t->cmp_ok($messages[4]['message'], '===', $message, 'message : [long text]');
 $t->cmp_ok($messages[4]['catalogue'], '===', 'catalogue_3', 'catalogue : catalogue_3');
 
+
+$t->diag('Test format_number_choice');
+
+$code = <<<I18N
+  <?php
+    echo format_number_choice("text_1|text_2", array(), 1);
+  I18N;
+I18N;
+
+$extract = $phpExtractor->extract($code);
+
+$t->cmp_ok(count($extract), '===', 1, '1 results found');
+$t->cmp_ok($extract[0]['message'], '===', 'text_1|text_2', 'message : text_1|text_2');
+$t->cmp_ok($extract[0]['catalogue'], '===', null, 'catalogue : NULL');
+
+$t->diag('Test format_number_choice with catalogue');
+
+$code = <<<I18N
+  <?php
+    echo format_number_choice("text_1|text_2", array('toto' => 'titi'), 1, 'catalogue_3');
+  I18N;
+I18N;
+
+$extract = $phpExtractor->extract($code);
+
+$t->cmp_ok(count($extract), '===', 1, '1 result found');
+$t->cmp_ok($extract[0]['message'], '===', 'text_1|text_2', 'message : text_1|text_2');
+$t->cmp_ok($extract[0]['catalogue'], '===', 'catalogue_3', 'catalogue : catalogue_3');
+
+$t->diag('Mixing helper functions');
+
+$code = <<<I18N
+  <?php
+    echo format_number_choice("text_1|text_2", array('toto' => 'titi'), 1, 'catalogue_3');
+    echo __("message_1", array(), 'blog');
+    echo __("message_2", array(), 'catalogu3');
+I18N;
+
+$extract = $phpExtractor->extract($code);
+
+$t->cmp_ok(count($extract), '===', 3, '3 results found');
+$t->cmp_ok($extract[0]['message'], '===', 'text_1|text_2', 'message : text_1|text_2');
+$t->cmp_ok($extract[0]['catalogue'], '===', 'catalogue_3', 'catalogue : catalogue_3');
+
+$t->cmp_ok($extract[1]['message'], '===', 'message_1', 'message : message_1');
+$t->cmp_ok($extract[1]['catalogue'], '===', 'blog', 'catalogue : blog');
+
+$t->cmp_ok($extract[2]['message'], '===', 'message_2', 'message : message_2');
+$t->cmp_ok($extract[2]['catalogue'], '===', 'catalogu3', 'catalogue : catalogue_3');
+
+// $t->diag('Test nested i18n helper function');
+// 
+// $code = <<<I18N
+//   <?php
+//   echo __("message_1", array(
+//     '%name%' => format_number_choice("text_1|text_2", array('toto' => 'titi'), 1, 'catalogue_3')
+//   ), 'blog');
+// I18N;
+// 
+// $extract = $phpExtractor->extract($code);
+// 
+// $t->cmp_ok(count($extract), '===', 2, '2 results found');
+// $t->cmp_ok($extract[0]['message'], '===', 'text_1|text_2', 'message : text_1|text_2');
+// $t->cmp_ok($extract[0]['catalogue'], '===', 'catalogue_3', 'catalogue : catalogue_3');
