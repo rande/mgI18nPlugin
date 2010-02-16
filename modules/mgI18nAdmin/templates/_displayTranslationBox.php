@@ -20,8 +20,8 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" ></script>
 -->
 
-<link rel="stylesheet" type="text/css" media="screen" href="/mgI18nPlugin/css/redmond-jquery-ui.css" />
-<script type="text/javascript" src="/mgI18nPlugin/js/gui.js" ></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $sf_request->getRelativeUrlRoot() ?>/mgI18nPlugin/css/redmond-jquery-ui.css" />
+<script type="text/javascript" src="<?php echo $sf_request->getRelativeUrlRoot() ?>/mgI18nPlugin/js/gui.js" ></script>
 
 <div id="mg-i18n-dialog" class="ui-widget">
   <div id="mg-i18n-on-top-box">
