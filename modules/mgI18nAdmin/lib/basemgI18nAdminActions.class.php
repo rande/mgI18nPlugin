@@ -22,35 +22,40 @@ class basemgI18nAdminActions extends sfActions
     
     $catalogue = $request->getParameter('catalogue');
     $source    = $request->getParameter('source');
-
-    $catalogues = array();
+    $pdo       = $this->getContext()->getI18n()->getConnection();
+    
+    $catalogues = $markers = $values = array();
     
     $cultures = sfConfig::get('app_mgI18nPlugin_cultures_available');
     
-    foreach( $cultures as $code => $name)
+    foreach($cultures as $code => $name)
     {
       $catalogues[] = $catalogue.'.'.$code; 
+      $markers[] = '?';
+      $values[] = $catalogue.'.'.$code;
     }
     
-    $trans_units = Doctrine::getTable('mgI18nTransUnit')
-      ->createQuery('tu')
-      ->leftJoin('tu.mgI18nCatalogue tc')
-      ->select('*')
-      ->whereIn('tc.name', $catalogues)
-      ->addWhere('tu.source = ?', $source)
-      ->execute();
+    $values[] = $source;
+    
+    $sql = sprintf("
+      SELECT tc.name as tc_name, tc.source_lang as tc_culture, tu.target as tu_target
+      FROM trans_unit tu 
+      LEFT JOIN catalogue as tc ON tc.cat_id = tu.cat_id 
+      WHERE 
+        tc.name IN (%s) 
+        AND tu.source = ?
+    ", implode(', ', $markers));
+    
+    $stm = $pdo->prepare($sql);
+    $stm->execute($values);
 
     $json = array();
-    
-    
-    foreach($trans_units as $trans_unit)
+    foreach($stm->fetchAll(PDO::FETCH_ASSOC) as $trans_unit)
     {
-      $name_catalogue = $trans_unit->mgI18nCatalogue->name;
-      $culture = $trans_unit->mgI18nCatalogue->getLanguage();
-      
-      $json['mg-i18n-target-'.$culture] = $trans_unit->target;
-      
-      
+      $name_catalogue = $trans_unit['tc_name'];
+      $culture = mgI18n::getLanguage($name_catalogue);
+        
+      $json['mg-i18n-target-'.$culture] = $trans_unit['tu_target'];
       unset($cultures[$culture]);
     }
     
@@ -77,8 +82,7 @@ class basemgI18nAdminActions extends sfActions
       'targets'   => $targets
     );
     
-    $form = new mgI18nTargetsForm;
-
+    $form = new mgI18nTargetsForm(array(), array('message_source' => $this->context->getI18n()->getMessageSource()));
 
     $form->bind($params);
     if($form->isValid())
@@ -97,7 +101,6 @@ class basemgI18nAdminActions extends sfActions
     }
     
     return sfView::NONE;
-    
   }
 
   public function executeGetMessagesByType(sfWebRequest $request)
@@ -105,61 +108,72 @@ class basemgI18nAdminActions extends sfActions
     // TODO : set this value in a settings
     $this->forward404If(!sfConfig::get('mg_i18n_enabled'));
     
-    $valid_types = array('lib', 'application', 'ajax');
+    $valid_types = array('ajax_lib_application', 'database');
 
+    $pdo  = $this->getContext()->getI18n()->getConnection();
     $type = $request->getParameter('type');
     
     $this->forward404If(!in_array($type, $valid_types));
    
     $finder = sfFinder::type('file')
-      ->ignore_version_control();
+      ->ignore_version_control()
+      ->prune('web')
+      ->prune('test');
 
-    if($type == 'lib')
+    $messages = array();
+    
+    if($type == 'ajax_lib_application')
     {
-      $in = sfConfig::get('sf_root_dir');
-      
-      $finder
-        ->discard('*actions.class.php')
-        ->name('*.class.php')
-      ;
-    }
-    else if($type == 'application')
-    {
-      $in = sfConfig::get('sf_root_dir');
+      // get ajax messages
+      $event    = $this->getContext()->getEventDispatcher()->filter(new sfEvent($this, 'mgI18nPlugin.assign_ajax_values'), array());    
+      $ajax_messages = $event->isProcessed() ? $event->getReturnValue() : array();
 
-      $finder
-        ->name('*actions.class.php')
-      ;
-    }
-    // untranslatable sentence, hard to find
-    else if($type == 'ajax')
-    {
-      $event    = new sfEvent($this, 'mgI18nPlugin.assign_ajax_values');
-
-      $this->getContext()->getEventDispatcher()->filter($event, array());
-
-      $messages = $event->getReturnValue();
-      $finder   = false;
-    }
-    else
-    {
-      $this->forward404();
-    }
-
-    if($finder)
-    {
-      $files = $finder->in($in);
-
+      // get files messages
       $php_extractor = new mgI18nPhpExtractor;
 
-      $messages = array();
+      $in = sfConfig::get('sf_root_dir');
+      $finder
+        ->name('*actions.class.php')
+        ->name('*.class.php')
+      ;
+      
+      $files = $finder->in($in);
       foreach($files as $file)
       {
         $content  = file_get_contents($file);
         $messages = array_merge($messages, $php_extractor->extract($content));
       }
-    }
 
+      $messages = array_merge($messages, $ajax_messages);
+    }
+    else if($type == 'database')
+    {
+      $message = '%'.$request->getParameter('message').'%';
+      
+      $stm = $pdo->prepare("
+        SELECT DISTINCT tc.name tc_name, tu.target tu_target, tu.source tu_source
+        FROM trans_unit tu
+        LEFT JOIN catalogue tc ON tu.cat_id = tc.cat_id
+        WHERE target LIKE ? OR source LIKE ?"
+      );
+      
+      $stm->execute(array($message, $message));
+      
+      $messages = array();
+      foreach($stm->fetchAll(PDO::FETCH_ASSOC) as $row)
+      {
+        
+        $start = strpos($row['tc_name'], '.') + 1;
+        $end   = strpos($row['tc_name'], '.', $start);
+        $catalogue = substr($row['tc_name'], $start , $end - $start);
+
+        $messages[] = array(
+          'message' => $row['tu_source'],
+          'catalogue' => $catalogue
+        );
+      }
+    }
+    
     // now transform the output to be valid
     $valid_messages = array();
     foreach($messages as $message)
@@ -183,7 +197,7 @@ class basemgI18nAdminActions extends sfActions
       $hash = md5($message['message']);
       $valid_messages[$catalogue][$hash] = array(
         'source' => $message['message'],
-        'target' => htmlentities(truncate_text(__($message['message'], null, $original_catalogue), 70)),
+        'target' => truncate_text(__($message['message'], null, $original_catalogue), 70),
         'params' => isset($message['params']) ? $message['params'] : array(), // not fully implemented yet,
         'is_translated' => $message['message'] != __($message['message'], null, $original_catalogue)
       );

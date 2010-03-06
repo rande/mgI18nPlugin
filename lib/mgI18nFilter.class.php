@@ -37,10 +37,11 @@ class mgI18nFilter extends sfFilter
     // include javascripts and stylesheets
     $content = $response->getContent();
     
-    if (false !== ($pos = strpos($content, '</head>')))
+    if (false !== ($pos = strpos($content, '</body>')))
     {
 
       $html = '';
+      $html .=  get_component('mgI18nAdmin', 'displayTranslationBox');
       $html .= "<script>\n";
       $html .= "\tvar _mg_i18n_messages = ".json_encode($this->context->getI18n()->getRequestedMessages());
       $html .= "\n</script>\n";

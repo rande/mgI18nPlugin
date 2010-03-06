@@ -1,0 +1,24 @@
+UPGRADING FROM VERSION_0_0_6
+----------------------------
+
+ * The plugin can be used with Propel or Doctrine so you must update your factories files to
+   set the name of the connection instead of the DSN information
+   
+       i18n:
+         class: mgI18N
+         param:
+           source:               mgMySQL
+           database:             doctrine  # or propel or any names defined in the databases.yml files
+   
+ 
+ * the GUI is now automatically added by the filter, so you have to remove all references
+   of this code in your template files :
+ 
+      <?php if(sfConfig::get('mg_i18n_enabled')): ?>
+        <?php include_component('mgI18nAdmin', 'displayTranslationBox') ?>
+      <?php endif;?>
+      
+ * All tasks are now under the i18n namespace
+ 
+   - mgI18n:xliff-import => i18n:mg-xliff-import
+

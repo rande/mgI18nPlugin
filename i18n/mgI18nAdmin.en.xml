@@ -9,20 +9,16 @@
         <target>Translation</target>
       </trans-unit>
       <trans-unit id="1">
-        <source>tabs_translation_page</source>
-        <target>Current page</target>
+        <source>tabs_translation_current_page</source>
+        <target>Page</target>
+      </trans-unit>      
+      <trans-unit id="1">
+        <source>tabs_translation_ajax_lib_application</source>
+        <target>Files</target>
       </trans-unit>
       <trans-unit id="1">
-        <source>tabs_translation_application</source>
-        <target>Actions</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>tabs_translation_lib</source>
-        <target>Libraries</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>tabs_translation_ajax</source>
-        <target>Ajax</target>
+        <source>tabs_translation_db</source>
+        <target>Stocked</target>
       </trans-unit>
       <trans-unit id="1">
         <source>label_hide_translated_page</source>

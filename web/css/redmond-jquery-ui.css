@@ -70,12 +70,10 @@ div#mg-i18n-dialog table {
 
 
 div#mg-i18n-dialog {
-  line-height: 1;
   display: none;
   position: absolute;
-  font-size: 10px;
-  top: 0;
-  right: 0;
+  top: 25px;
+  right: 15px;
   text-align: left;
 }
 
@@ -115,6 +113,8 @@ div#mg-i18n-dialog h2 {
 #mg-i18n-dialog #mg-i18n-right-box {
   float: left;
   width: 40%;
+  padding-left:10px;
+  padding-top:20px;
 }
 
 #mg-i18n-dialog textarea.mg-i18n-translation-input {
@@ -130,10 +130,23 @@ div#mg-i18n-dialog h2 {
   overflow: scroll;
 }
 
+#mg-i18n-dialog div.mg-i18n-messages table {
+  width: 100%;
+}
+
+#mg-i18n-dialog div.mg-i18n-messages thead {
+  font-weight: bold;
+  text-align: center;
+}
+
+#mg-i18n-dialog div.mg-i18n-messages td {
+  padding: 2px;
+}
+
+
 #mg-i18n-dialog div.mg-i18n-messages td._mg_i18_td_selected {
   background: #5B482F;
   color: white;
-  padding: 2px;
 }
 
 #mg-i18n-dialog div.mg-i18n-messages td._mg_i18_td_unselected {
@@ -141,7 +154,7 @@ div#mg-i18n-dialog h2 {
 }
 
 #mg-i18n-dialog textarea.mg-i18n-translation-input {
-
+  padding: 5px;
 }
   
 
@@ -559,3 +572,10 @@ div#mg-i18n-dialog h2 {
 /* Overlays */
 #mg-i18n-dialog .ui-widget-overlay { background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
 #mg-i18n-dialog .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -webkit-border-radius: 8px; }
+
+#mg-i18n-dialog td, #mg-i18n-dialog th, #mg-i18n-dialog label, #mg-i18n-dialog input, #mg-i18n-dialog textarea,
+#mg-i18n-dialog submit, #mg-i18n-dialog h1, #mg-i18n-dialog strong
+{
+  font-size: 1.2em !important;
+  line-height: 1.4em !important;
+}

@@ -20,6 +20,12 @@ class PluginmgI18nTargetsForm extends sfForm
 
   public function configure()
   {
+    
+    if(!$this->getOption('message_source') instanceof sfMessageSource)
+    {
+      
+      throw new sfException('You must provide a valide message_source option');
+    }
 
     $this->setWidgets(array(
       'catalogue' => new sfWidgetFormInput,
@@ -46,40 +52,54 @@ class PluginmgI18nTargetsForm extends sfForm
   public function save()
   {
     $cultures = sfConfig::get('app_mgI18nPlugin_cultures_available');
-
+    $source   = $this->getValue('source');
+    $targets  = $this->getValue('targets');
+  
+    // build the catalogue array
+    $markers = array();
     foreach( $cultures as $code => $name)
     {
       $catalogues[] = $this->getValue('catalogue').'.'.$code;
+      $markers[]    = '?';
     }
     
-    $tc = Doctrine::getTable('mgI18nCatalogue');
+    // get current translation for the current source
+    $sql = sprintf("
+      SELECT tu.msg_id, tu.cat_id, tu.target, tc.name as tc_name
+      FROM trans_unit tu 
+      LEFT JOIN catalogue as tc ON tc.cat_id = tu.cat_id 
+      WHERE tc.name IN (%s) AND tu.source = ?", implode(', ', $markers));
     
-    $trans_units = Doctrine::getTable('mgI18nTransUnit')
-      ->createQuery('tu')
-      ->leftJoin('tu.mgI18nCatalogue tc')
-      ->select('*')
-      ->whereIn('tc.name', $catalogues)
-      ->addWhere('tu.source = ?', $this->getValue('source'))
-      ->execute();
-
-    $targets = $this->getValue('targets');
+    $pdo = $this->getOption('message_source')->getConnection();
+    $stm = $pdo->prepare($sql);
+    $stm->execute(array_merge($catalogues, array($source)));
     
-    foreach($trans_units as $trans_unit)
+    // initialize the update query statement
+    $update_stm = $pdo->prepare("UPDATE trans_unit SET target = ? WHERE msg_id = ?");
+    
+    // update translation
+    foreach($stm->fetchAll(PDO::FETCH_ASSOC) as $trans_unit)
     {
-      $name_catalogue = $trans_unit->mgI18nCatalogue->name;
-      $culture = $trans_unit->mgI18nCatalogue->getLanguage();
+      $name_catalogue = $trans_unit['tc_name'];
+      $culture = mgI18n::getLanguage($name_catalogue);
       
-      $trans_unit->setTarget($targets[$culture]);
-      $trans_unit->save();
-
+      $target = $targets[$culture];
+      
+      $update_stm->execute(array($target, $trans_unit['msg_id']));
+      
       unset($cultures[$culture]);
     }
-    
+
     foreach($cultures as $code => $name)
     {
-      $tc->addMessage($this->getValue('catalogue').'.'.$code, $this->getValue('source'), $targets[$code]);
+       $this->getOption('message_source')->insert(
+        $source, 
+        $targets[$code],
+        '',
+        $this->getValue('catalogue').'.'.$code
+      );
     }
-
+    
     return true;
   }
 }

@@ -20,31 +20,24 @@ function mgI18nPlugin(options)
 
   this.hide_translated = false;
 
-
   this.page = {
     loaded: false,
     messages: {},
     panel: null
   }
 
-  this.application = {
+  this.ajax_lib_application = {
     loaded: false,
     messages: {},
     panel: null
   }
 
-  this.lib = {
+  this.database = {
     loaded: false,
     messages: {},
     panel: null
   }
-
-  this.ajax = {
-    loaded: false,
-    messages: {},
-    panel: null
-  }
-
+  
   this.init(options);
 }
 
@@ -77,7 +70,9 @@ mgI18nPlugin.prototype.init = function(options)
 
   this.url_translation = options.url_translation || null;
   this.url_messages = options.url_messages || null;
-
+  
+  this.modal = jQuery('#mg-i18n-dialog');
+  
   // create the dialog box
   jQuery('#mg-i18n-dialog').draggable({
     appendTo: 'body',
@@ -91,9 +86,9 @@ mgI18nPlugin.prototype.init = function(options)
 
       jQuery(this).css('zIndex', 10000);
     }
-	});
+  });
 
-  jQuery('#mg-i18n-on-top-box').click(function(){
+  jQuery('#mg-i18n-on-top-box', this.modal).click(function(){
 
     if(mgI18nPlugin.state.dragged)
     {
@@ -107,7 +102,7 @@ mgI18nPlugin.prototype.init = function(options)
   });
 
   // create the tabulation
-  jQuery('#mg-i18n-left-box').tabs({
+  jQuery('#mg-i18n-left-box', this.modal).tabs({
     select: function(event, ui) {
 
       var rel = ui.panel.getAttribute('rel');
@@ -133,7 +128,6 @@ mgI18nPlugin.prototype.init = function(options)
         success: function(data, textStatus) {
           var type = data.type;
           var messages = data.messages;
-
           mgI18nPlugin.instance.loadTranslationTable(type, messages);
         }
       });
@@ -144,7 +138,7 @@ mgI18nPlugin.prototype.init = function(options)
   });
 
   // handle the translation form
-  jQuery('#mg-i18n-form-update').submit(function(event) {
+  jQuery('#mg-i18n-form-update', this.modal).submit(function(event) {
 
     event.preventDefault();
 
@@ -166,7 +160,7 @@ mgI18nPlugin.prototype.init = function(options)
   });
 
   // handle hide translation checkbox
-  jQuery('input.mg-i18n-hide-translated').change(function() {
+  jQuery('input.mg-i18n-hide-translated', this.modal).change(function() {
 
     var panel = jQuery(this).parent().parent();
     var display = jQuery(this).attr('checked');
@@ -174,7 +168,7 @@ mgI18nPlugin.prototype.init = function(options)
     mgI18nPlugin.instance.displayTranslated(panel, display);
   });
 
-  jQuery('input.mg-i18n-current-page-search').keyup(function() {
+  jQuery('input.mg-i18n-current-page-search', this.modal).keyup(function() {
 
     var panel = jQuery(this).parent().parent();
     var value = jQuery(this).val();
@@ -182,16 +176,34 @@ mgI18nPlugin.prototype.init = function(options)
     mgI18nPlugin.instance.filterTranslated(panel, value);
   });
 
-  this.page.panel        = jQuery('div#mg-i18n-panel-page');
-  this.application.panel = jQuery('div#mg-i18n-panel-application');
-  this.lib.panel         = jQuery('div#mg-i18n-panel-lib');
-  this.ajax.panel        = jQuery('div#mg-i18n-panel-ajax');
-
-  jQuery('.mg-i18n-parameters').hide();
-
-
-  jQuery('#mg-i18n-dialog').resizable();
-
+  jQuery('input.mg-i18n-current-database-search', this.modal).keyup(function(event){
+    if(event.keyCode == 13)
+    {
+      jQuery('tbody', mgI18nPlugin.instance.database.panel).html('');
+      
+      jQuery.ajax({
+        type: 'GET',
+        url: mgI18nPlugin.instance.url_messages.replace('MESSAGE_TYPE', 'database'),
+        data: {message: jQuery(this).val()},
+        dataType: "json",
+        cache: false,
+        success: function(data, textStatus) {
+          var type = data.type;
+          var messages = data.messages;
+          mgI18nPlugin.instance.loadTranslationTable(type, messages);
+        }
+      });
+    }
+  });
+  
+  this.page.panel     = jQuery('div#mg-i18n-panel-page', this.modal);
+  this.ajax_lib_application.panel = jQuery('div#mg-i18n-panel-ajax_lib_application', this.modal);
+  this.database.panel = jQuery('div#mg-i18n-panel-database', this.modal);
+  
+  jQuery('#mg-i18n-loading', this.modal).hide();
+  jQuery('#mg-i18n-submit', this.modal).hide();
+  jQuery('.mg-i18n-parameters', this.modal).hide();
+  jQuery('#mg-i18n-dialog', this.modal).resizable();
 
   this.toggleModalState('hide');
 }
@@ -285,12 +297,20 @@ mgI18nPlugin.prototype.loadTranslationTable = function(name, mg_i18n_messages)
   this[name].messages = mg_i18n_messages;
   this[name].loaded   = true;
 
+  if(name == 'database')
+  {
+    this[name].loaded = false;
+  }
+  
   var tbody = jQuery('tbody', this[name].panel);
 
   var html = "";
 
+  var current_catalogue = '';
   for(name_catalogue in this[name].messages)
   {
+    
+    html += "<tr><td colspan='2' style='font-weight:bold; padding-top:10px'>" + name_catalogue + "</td></tr>";
     var catalogue = this[name].messages[name_catalogue];
     var display_catalogue = name_catalogue.split(".")[1];
 
@@ -298,8 +318,11 @@ mgI18nPlugin.prototype.loadTranslationTable = function(name, mg_i18n_messages)
     {
       trans = catalogue[index];
 
-      html += "<tr catalogue='" + name_catalogue + "' source='" + trans.source + "' rel='" + name + "' class='_mg_i18_td_unselected " + (trans.is_translated ? 'mg-target-translated' : 'mg-target-non-translated') + "'><td hash='" + index + "'>" + display_catalogue + "</td><td>" + trans.target + "</td></tr>";
-
+      html += "<tr catalogue='" + name_catalogue + "' source='" + trans.source + "' rel='" + name + "' class='_mg_i18_td_unselected " + (trans.is_translated ? 'mg-target-translated' : 'mg-target-non-translated') + "'>";
+      // html += "  <td hash='" + index + "'>"  + trans.target + '   (' + trans.source + ") </td>";
+      html += "  <td hash='" + index + "'>"  + trans.target + "</td>";
+      html += "  <td><em>" + trans.source + "</em></td>";
+      html += "</tr>";
     }
   }
 

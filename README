@@ -1,14 +1,12 @@
 mgI18nPlugin
 ============
 
-This plugin add an extra option "Translation" in the debug web panel. This panel
-allow the user to update the translation on the current page.
-
 Requirements
 ------------
 
 * symfony 1.2
-* doctrine 1.0
+* Propel or Doctrine
+* pdo_mysql (not tested with others databases)
 * jQuery
 
 Installation
@@ -23,10 +21,10 @@ Installation
             class: mgI18N
             param:
               source:               mgMySQL
-              database:             mysql://user:password@127.0.0.1/project_database_i18n
-              encoding:             utf8
+              database:             doctrine  # or propel or any names defined in the databases.yml files
               debug:                off
-              global_application: 'frontend' # Optional ; use the same translations catalogues for all applications
+              learning_mode:        on        # if 'on' all translations are automatically added to the database
+              global_application:  'frontend' # Optional ; use the same translations catalogues for all applications
               untranslated_prefix:  "[T]"
               untranslated_suffix:  "[/T]"
               cache:
@@ -61,10 +59,10 @@ Installation
             username: username
             password: password
 
- * rebuild your model
+ * install the table
 
         [php]
-        ./symfony doctrine:build-all-reload
+        ./symfony i18n:mg-create-table frontend
 
  * Install jQuery, 2 options
 
@@ -87,8 +85,8 @@ Installation
 
  * install plugin translation for each application
 
-        ./symfony mgI18n:xliff-import frontend plugins/mgI18nPlugin/i18n/*
-        ./symfony mgI18n:xliff-import backend plugins/mgI18nPlugin/i18n/*
+        ./symfony i18n:mg-xliff-import frontend plugins/mgI18nPlugin/i18n/*
+        ./symfony i18n:mg-xliff-import backend plugins/mgI18nPlugin/i18n/*
 
  * add the filter, edit the filters.yml (the filter add current page translation messages)
 
@@ -97,14 +95,6 @@ Installation
           class: mgI18nFilter
 
         common:    ~ # before the common filter
-
- * edit your layout.php and add this code
-
-        [php]
-        <?php if(sfConfig::get('mg_i18n_enabled')): ?>
-          <?php include_component('mgI18nAdmin', 'displayTranslationBox') ?>
-        <?php endif;?>
-
 
  * clear cache
 
@@ -170,14 +160,6 @@ this class into the project|application lib folder and customize the logic
 depends on the specification.
 
     [php]
-    /**
-     * Copy-and-paste this class into the project|application lib folder and
-     * customize the logic depends on the specification.
-     *
-     * @package    mgI18nPlugin
-     * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
-     * @version    SVN: $Id$
-     */
     class mgI18nUser
     {
 
@@ -208,4 +190,4 @@ Note
 You can import xliff catalogue with the command : 
 
         [php]
-        ./symfony mgI18n:xliff-import frontend PATH_TO_YOUR_CATALOGUES/*|YOUR_CATALOGUE
+        ./symfony i18n:mg-xliff-import frontend PATH_TO_YOUR_CATALOGUES/*|YOUR_CATALOGUE
