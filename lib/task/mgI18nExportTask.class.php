@@ -33,9 +33,9 @@ class mgI18nExportTask extends sfBaseTask
     ));
     
     $this->aliases = array('mg-i18n-xliff-export');
-    $this->namespace = 'mgI18n';
-    $this->name = 'xliff-export';
-    $this->briefDescription = 'Export a database catalogue into a xliff file';
+    $this->namespace = 'i18n';
+    $this->name = 'mg-xliff-export';
+    $this->briefDescription = '[mgI18nPlugin] Export a database catalogue into a xliff file';
 
     $this->detailedDescription = <<<EOF
 Export a database catalogue into a xliff file
@@ -48,8 +48,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
 
-    $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
-    sfContext::createInstance($configuration);
+    $databaseManager = new sfDatabaseManager($this->configuration);
     
     // TODO
     

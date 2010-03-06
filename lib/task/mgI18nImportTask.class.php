@@ -33,9 +33,9 @@ class mgI18nImportTask extends sfBaseTask
     ));
     
     $this->aliases = array('mg-i18n-xliff-import');
-    $this->namespace = 'mgI18n';
-    $this->name = 'xliff-import';
-    $this->briefDescription = 'Import a symfony xliff catalogue into the database';
+    $this->namespace = 'i18n';
+    $this->name = 'mg-xliff-import';
+    $this->briefDescription = '[mgI18nPlugin] Import a symfony xliff catalogue into the database';
 
     $this->detailedDescription = <<<EOF
 Import a symfony xliff catalogue into the database
@@ -48,16 +48,16 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     
-    $databaseManager = new sfDatabaseManager($this->configuration);
+    $message_source = new sfMessageSource_mgMySQL(sfConfig::get('app_mgI18nPlugin_connection'));
     
     foreach($arguments['source'] as $source)
     {
-      $this->handleSource($arguments['application'], $source);
+      $this->handleSource($message_source, $arguments['application'], $source);
     }
     
   }
   
-  protected function handleSource($application, $source)
+  protected function handleSource($message_source, $application, $source)
   {
     
     $culture = null;
@@ -103,15 +103,23 @@ EOF;
         }
       }
     }
-    
-    $table = Doctrine::getTable('mgI18nCatalogue');
+
     $catalogue_app = $application.'.'.$catalogue.'.'.$culture;
 
+    $messages = $message_source->loadData($catalogue_app);
+    
     foreach($merged as $source => $target)
     {
-      $this->logSection('mgI18n', '  + '.$source .' => '. $target);
-      $table->addMessage($catalogue_app, $source, $target);
+      if(isset($messages[$source]))
+      {
+        $this->logSection('mgI18n', '  ~ update : '.$source .' => '. $target);
+        $message_source->update($source, $target, '', $catalogue_app);
+      }
+      else
+      {
+        $this->logSection('mgI18n', '  + insert : '.$source .' => '. $target);
+        $message_source->insert($source, $target, '', $catalogue_app);
+      }
     }
-   
   }
 }

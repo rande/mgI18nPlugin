@@ -8,20 +8,16 @@
         <target>Traduction</target>
       </trans-unit>
       <trans-unit id="1">
-        <source>tabs_translation_page</source>
+        <source>tabs_translation_current_page</source>
         <target>Page</target>
+      </trans-unit>      
+      <trans-unit id="1">
+        <source>tabs_translation_ajax_lib_application</source>
+        <target>Fichiers</target>
       </trans-unit>
       <trans-unit id="1">
-        <source>tabs_translation_application</source>
-        <target>Actions</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>tabs_translation_lib</source>
-        <target>Libraries</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>tabs_translation_ajax</source>
-        <target>Ajax</target>
+        <source>tabs_translation_db</source>
+        <target>En base</target>
       </trans-unit>
       <trans-unit id="1">
         <source>tabs_translation_help</source>

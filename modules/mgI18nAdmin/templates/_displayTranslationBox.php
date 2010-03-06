@@ -32,13 +32,11 @@
     <div id="mg-i18n-left-box">
       <ul>
         <li><a href="#mg-i18n-panel-page"><?php echo __('tabs_translation_current_page', null, 'mgI18nAdmin') ?></a></li>
-        <li><a href="#mg-i18n-panel-ajax"><?php echo __('tabs_translation_current_ajax', null, 'mgI18nAdmin') ?></a></li>
-        <li><a href="#mg-i18n-panel-application"><?php echo __('tabs_translation_application', null, 'mgI18nAdmin') ?></a></li>
-        <li><a href="#mg-i18n-panel-lib"><?php echo __('tabs_translation_lib', null, 'mgI18nAdmin') ?></a></li>
-        <li><a href="#mg-i18n-panel-help"><?php echo __('tabs_translation_help', null, 'mgI18nAdmin') ?></a></li>
+        <li><a href="#mg-i18n-panel-ajax_lib_application"><?php echo __('tabs_translation_ajax_lib_application', null, 'mgI18nAdmin') ?></a></li>
+        <li><a href="#mg-i18n-panel-database"><?php echo __('tabs_translation_db', null, 'mgI18nAdmin') ?></a></li>
       </ul>
 
-      <?php foreach(array('page', 'ajax', 'application', 'lib') as $type): ?>
+      <?php foreach(array('page', 'ajax_lib_application') as $type): ?>
         <div id="mg-i18n-panel-<?php echo $type ?>" rel="<?php echo $type ?>">
           <div class="mg-i18n-toolbar">
             <input type="checkbox" class="mg-i18n-hide-translated" />
@@ -51,8 +49,8 @@
             <table>
               <thead>
                 <tr>
-                  <td class="mg-i18n-td-catalogue"><?php echo __('header_catalogue', null, 'mgI18nAdmin') ?></td>
-                  <td class="mg-i18n-td-targets"><?php echo __('header_targets', null, 'mgI18nAdmin') ?></td>
+                  <td class="mg-i18n-td-catalogue"><?php echo __('header_target', null, 'mgI18nAdmin') ?></td>
+                  <td class="mg-i18n-td-targets"><?php echo __('header_source', null, 'mgI18nAdmin') ?></td>
                 </tr>
               </thead>
               <tbody />
@@ -62,9 +60,23 @@
         </div>
       <?php endforeach ?>
       
-      <div id="mg-i18n-panel-help">
-        <h3><?php echo __('title_instruction', null, 'mgI18nAdmin') ?></h3>
-        <p><?php echo __('message_instruction', null, 'mgI18nAdmin') ?></p>
+      <div id="mg-i18n-panel-database">
+        <div class="mg-i18n-toolbar">
+          <?php echo __('label_filter_list', null, 'mgI18nAdmin') ?>
+          <input type="text" class="mg-i18n-current-database-search" />
+        </div>
+        <div class="mg-i18n-messages">
+          <table>
+            <thead>
+              <tr>
+                <td class="mg-i18n-td-catalogue"><?php echo __('header_catalogue', null, 'mgI18nAdmin') ?></td>
+                <td class="mg-i18n-td-targets"><?php echo __('header_targets', null, 'mgI18nAdmin') ?></td>
+              </tr>
+            </thead>
+            <tbody />
+            <tfoot />
+          </table>
+        </div>
       </div>
     </div>
 
