@@ -4,7 +4,7 @@ mgI18nPlugin
 Requirements
 ------------
 
-* symfony 1.2
+* symfony 1.3
 * Propel or Doctrine
 * pdo_mysql (not tested with others databases)
 * jQuery

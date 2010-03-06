@@ -41,7 +41,7 @@ class PluginmgI18nTargetsForm extends sfForm
       'targets'   => new sfValidatorPass()
     ));
     
-     $this->disableLocalCSRFProtection(); 
+    $this->disableLocalCSRFProtection(); 
   }
   
   public function save()
