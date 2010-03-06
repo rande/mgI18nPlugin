@@ -122,7 +122,7 @@ if(typeof jQuery != 'undefined')
   jQuery(window).bind('load', function() {
     mgI18nPlugin.instance = new mgI18nPlugin({
       url_translation: '<?php echo url_for('mg_i18n_get_targets') ?>',
-      url_messages: '<?php echo url_for('@mg_i18n_get_messages?type=MESSAGE_TYPE') ?>',
+      url_messages: '<?php echo url_for('@mg_i18n_get_messages?type=MESSAGE_TYPE') ?>'
     });
   });
 }
