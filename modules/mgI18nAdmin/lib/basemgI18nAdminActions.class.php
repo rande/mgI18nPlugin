@@ -22,7 +22,7 @@ class basemgI18nAdminActions extends sfActions
     
     $catalogue = $request->getParameter('catalogue');
     $source    = $request->getParameter('source');
-    $pdo       = $this->getContext()->getI18n()->getConnection();
+    $pdo       = $this->getContext()->getI18n()->getMessageSource()->getConnection();
     
     $catalogues = $markers = $values = array();
     
@@ -110,7 +110,7 @@ class basemgI18nAdminActions extends sfActions
     
     $valid_types = array('ajax_lib_application', 'database');
 
-    $pdo  = $this->getContext()->getI18n()->getConnection();
+    $pdo  = $this->getContext()->getI18n()->getMessageSource()->getConnection();
     $type = $request->getParameter('type');
     
     $this->forward404If(!in_array($type, $valid_types));
