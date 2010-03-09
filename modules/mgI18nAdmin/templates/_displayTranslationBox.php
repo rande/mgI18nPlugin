@@ -99,7 +99,7 @@
         </div>
 
         <div>
-          <img src="/mgI18nPlugin/images/tiny_red.gif" id="mg-i18n-loading"/>
+          <img src="<?php echo $sf_request->getRelativeUrlRoot() ?>/mgI18nPlugin/images/tiny_red.gif" id="mg-i18n-loading"/>
           <input type="submit" value="<?php echo __('btn_save_translation', null, 'mgI18nAdmin') ?>" id="mg-i18n-submit" />
         </div>
       </form>
@@ -109,7 +109,7 @@
 
   <div id="mg-i18n-loading-box" class="ui-widget ui-widget-content ui-corner-all">
     <?php echo __('message_loading', null, 'mgI18nAdmin') ?> <br />
-    <img src="/mgI18nPlugin/images/tiny_red.gif"/>
+    <img src="<?php echo $sf_request->getRelativeUrlRoot() ?>/mgI18nPlugin/images/tiny_red.gif"/>
   </div>
   
 </div>

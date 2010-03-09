@@ -60,10 +60,10 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     if($connection == null)
     {
-      $configuration = sfProjectConfiguration::getActive();
-      $manager  = new sfDatabaseManager($configuration);
-      $database = $manager->getDatabase($this->source);
-      $connection = $database->getConnection();
+      $configuration  = sfProjectConfiguration::getActive();
+      $manager        = new sfDatabaseManager($configuration);
+      $database       = $manager->getDatabase($this->source);
+      $connection     = $database->getConnection();
     }
 
     return $connection;
@@ -250,16 +250,17 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function &loadData($variant)
   {
+
     $stm = $this->pdo->prepare(
-      "SELECT t.id, t.source, t.target, t.comments
+      "SELECT t.msg_id, t.source, t.target, t.comments
         FROM trans_unit t, catalogue c
         WHERE c.cat_id =  t.cat_id
           AND c.name = ?
-        ORDER BY id ASC"
+        ORDER BY t.msg_id ASC"
     );
-    
-    $stm->execute(array($variant));
 
+    $stm->execute(array($variant));
+    
     $result = array();
 
     foreach($stm->fetchAll(PDO::FETCH_NUM) as $row)

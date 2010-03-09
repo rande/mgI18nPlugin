@@ -14,7 +14,7 @@ Installation
 
  * edit your factories.yml 
 
-        [yml]            
+        [yml]
         all:
           # ...
           i18n:
@@ -116,8 +116,8 @@ is to register to an event, and add the translation into an array.
           public function setup()
           {
             $this->enableAllPluginsExcept(array(
-             'sfPropelPlugin',
-             'sfCompat10Plugin'
+              'sfPropelPlugin',
+              'sfCompat10Plugin'
             ));
 
             // [...]
