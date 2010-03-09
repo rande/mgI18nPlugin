@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the mgWidgetsPlugin package.
- * (c) 2008 MenuGourmet 
+ * (c) 2008 MenuGourmet
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,7 @@
  */
 class sfMessageSource_mgMySQL extends sfMessageSource
 {
-  protected 
+  protected
     $informations  = null,
     $application   = null, // the application name used
     $pdo           = null  // the PDO connection
@@ -31,16 +31,16 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   {
     $this->source = (string) $source;
     $this->pdo    = $this->connect();
-    
+
     $this->loadInformations();
   }
 
   public function getConnection()
   {
-    
+
     return $this->pdo;
   }
-  
+
   /**
    * This code is very bad ... don't do that at home
    *
@@ -48,11 +48,11 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   public function connect()
   {
     static $connection;
-    
+
     // try to get the PDO connection object from the sfContext
     if(sfContext::hasInstance())
     {
-      
+
       return sfContext::getInstance()->getDatabaseConnection($this->source);
     }
 
@@ -60,16 +60,16 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     if($connection == null)
     {
-      $configuration = sfProjectConfiguration::getActive();
-      $manager  = new sfDatabaseManager($configuration);
-      $database = $manager->getDatabase($this->source);
-      $connection = $database->getConnection();
+      $configuration  = sfProjectConfiguration::getActive();
+      $manager        = new sfDatabaseManager($configuration);
+      $database       = $manager->getDatabase($this->source);
+      $connection     = $database->getConnection();
     }
 
     return $connection;
   }
-  
-  
+
+
   public function load($catalogue = null)
   {
     if($catalogue == null || strlen($catalogue) == 0)
@@ -98,7 +98,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
       $this->informations[$row[1]] = array('cat_id' => $row[0], 'date_modified' => $row[2]);
     }
   }
-  
+
   /**
    * Gets all the variants of a particular catalogue.
    *
@@ -132,11 +132,11 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     {
       $this->untranslated[$catalogue] = array();
     }
-    
+
     $this->untranslated[$catalogue][md5($message_information['source'])] = $message_information;
-    
+
   }
-  
+
   /**
    * Adds a untranslated message to the source. Need to call save()
    * to save the messages to source.
@@ -145,22 +145,22 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function append($message)
   {
-    
+
   }
-  
+
   public function getRequestedMessages()
   {
 
     return $this->untranslated;
   }
-  
+
   /**
    * @see sfMessageSource_MySQL
    *
    */
   protected function getLastModified($source)
   {
-     
+
     if(array_key_exists($source, $this->informations))
     {
 
@@ -180,7 +180,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     return array_key_exists($variant, $this->informations);
   }
 
-  
+
   /**
    * @see sfMessageSource_MySQL
    *
@@ -202,12 +202,12 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     $cat_id = $this->informations[$variant]['cat_id'];
 
     // first get the catalogue ID
-    
+
     $stm = $this->pdo->prepare("SELECT COUNT(*) FROM trans_unit WHERE cat_id = ?");
     $stm->execute(array($cat_id));
-    
+
     $val = $stm->fetchAll(PDO::FETCH_NUM);
-    
+
     $count = 0;
     if(count($val) > 0)
     {
@@ -227,7 +227,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     $stm = $this->pdo->prepare("UPDATE catalogue SET date_modified = ? WHERE cat_id = ?");
     $stm->execute(array($time, $cat_id));
-    
+
     if(array_key_exists($variant, $this->informations))
     {
 
@@ -241,7 +241,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     return $result;
   }
-  
+
   /**
    * Gets an array of messages for a particular catalogue and cultural variant.
    *
@@ -250,14 +250,15 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function &loadData($variant)
   {
+
     $stm = $this->pdo->prepare(
-      "SELECT t.id, t.source, t.target, t.comments
+      "SELECT t.msg_id, t.source, t.target, t.comments
         FROM trans_unit t, catalogue c
         WHERE c.cat_id =  t.cat_id
           AND c.name = ?
-        ORDER BY id ASC"
+        ORDER BY t.msg_id ASC"
     );
-    
+
     $stm->execute(array($variant));
 
     $result = array();
@@ -272,31 +273,31 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     return $result;
   }
-  
+
   public function getApplicationName()
   {
-    
+
     return sfConfig::get('mg_i18n_global_application', sfProjectConfiguration::getActive()->getApplication());
   }
-  
+
   /**
    * Returns a list of catalogue as key and all it variants as value.
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   function catalogues()
   {
 
     $stm = $this->pdo->prepare('SELECT name FROM catalogue ORDER BY name');
     $stm->execute();
-    
+
     $result = array();
-    
+
     foreach($stm->fetchAll(PDO::FETCH_NUM) as $row)
     {
       $details = explode('.', $row[0]);
       array_shift($details);
-      
+
       if (!isset($details[1]))
       {
         $details[1] = null;
@@ -307,7 +308,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
 
     return $result;
   }
-  
+
   /**
    * return the catalogue id
    *
@@ -316,31 +317,31 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function getCatalogueId($catalogue, $force_create = false)
   {
-    
+
     if(isset($this->informations[$catalogue]))
     {
-      
+
       return $this->informations[$catalogue]['cat_id'];
     }
-    
+
     $catalogues = array();
     if($force_create)
     {
       $insert_catalogue_stm  = $this->pdo->prepare("INSERT INTO catalogue (name) VALUES (?)");
       $insert_catalogue_stm->execute(array($catalogue));
-      
+
       $select_catalogue_stm = $this->pdo->prepare("SELECT cat_id FROM catalogue WHERE name = ?");
       $select_catalogue_stm->execute(array($catalogue));
       $catalogues = $select_catalogue_stm->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     $cat_id = count($catalogues) > 0 ? $catalogues[0]['cat_id'] : false;
-    
+
     return $this->informations[$catalogue]['cat_id'] = $cat_id;
   }
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -351,30 +352,30 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   {
     $select_message_stm  = $this->pdo->prepare("SELECT * FROM trans_unit WHERE target = ? AND cat_id = ? LIMIT 1");
     $insert_message_stm  = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target) VALUES (?, ?, ?)");
-    
+
     foreach($this->getRequestedMessages() as $catalogue => $messages)
     {
-  
+
       if(!is_array($messages) || count($messages) == 0)
       {
-        
+
         continue;
       }
 
       $variant = $catalogue.'.'.$this->culture;
       $cat_id = $this->getCatalogueId($variant, true);
-      
+
       foreach($messages as $message)
       {
         $result = $select_message_stm->execute(array($message['source'], $cat_id));
         $trans_unit = $select_message_stm->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if(count($trans_unit) == 1)
         {
-            
+
           continue;
         }
-  
+
         $insert_message_stm->execute(array($cat_id, $message['source'], $message['source']));
       }
     }
@@ -385,7 +386,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    *
    * @param string $message   the source message to delete.
    * @param string $catalogue the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   function delete($message, $catalogue = 'messages')
   {
@@ -394,10 +395,10 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     // the catalogue does not exist
     if($cat_id === false)
     {
-      
+
       return false;
     }
-    
+
     $stm = $this->pdo->prepare("DELETE FROM trans_unit WHERE cat_id = ? AND source = ?");
 
     return $stm->execute(array($cat_id, $message));
@@ -410,17 +411,17 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    * @param string $target    the new translation string.
    * @param string $comments  comments
    * @param string $catalogue the catalogue of the translation.
-   * @return boolean true if translation was updated, false otherwise. 
+   * @return boolean true if translation was updated, false otherwise.
    */
   function update($text, $target, $comments, $catalogue = 'messages')
   {
-    
+
     $cat_id = $this->getCatalogueId($catalogue);
-    
+
     $stm = $this->pdo->prepare("UPDATE trans_unit SET target = ? WHERE cat_id = ? AND source = ?");
     $stm->execute(array($target, $cat_id, $text));
   }
-  
+
   /**
    * Store a message into the database
    *
@@ -430,14 +431,14 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function insert($source, $target, $comments, $catalogue = 'messages')
   {
-    
+
     $stm = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target) VALUES (?, ?, ?)");
-    
+
     $cat_id = $this->getCatalogueId($catalogue, true);
-    
+
     return $stm->execute(array($cat_id, $source, $target));
   }
-  
+
   public function getId()
   {
     return md5(sfConfig::get('app_mgI18nPlugin_connection'));

@@ -22,8 +22,8 @@ Installation
             param:
               source:               mgMySQL
               database:             doctrine  # or propel or any names defined in the databases.yml files
-              debug:                off
-              learning_mode:        on        # if 'on' all translations are automatically added to the database
+              debug:                false
+              learning_mode:        true        # if 'on' all translations are automatically added to the database
               global_application:  'frontend' # Optional ; use the same translations catalogues for all applications
               untranslated_prefix:  "[T]"
               untranslated_suffix:  "[/T]"

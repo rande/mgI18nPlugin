@@ -1,6 +1,9 @@
 UPGRADING FROM VERSION_0_0_6
 ----------------------------
 
+ * With symfony 1.3 and 1.4 the yaml format does not accept the 'on' and 'off' value
+   You need to set 'true' or 'false'
+
  * The plugin can be used with Propel or Doctrine so you must update your factories files to
    set the name of the connection instead of the DSN information
    
