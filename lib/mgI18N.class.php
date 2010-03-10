@@ -85,7 +85,7 @@ class mgI18N extends sfI18N
     }
     // end code from I18nHelper.php file
 
-    $pseudo_string = strtr($string, $args);
+    $pseudo_string = strtr($pseudo_string, $args);
 
     $value = array(
       'source'        => $string,
