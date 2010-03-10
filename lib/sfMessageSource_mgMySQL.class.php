@@ -57,7 +57,6 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     }
 
     // try to get the PDO connection object from the configuration
-
     if($connection == null)
     {
       $configuration  = sfProjectConfiguration::getActive();
@@ -134,7 +133,6 @@ class sfMessageSource_mgMySQL extends sfMessageSource
     }
     
     $this->untranslated[$catalogue][md5($message_information['source'])] = $message_information;
-    
   }
   
   /**
@@ -350,7 +348,7 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   function save($catalogue = 'messages')
   {
-    $select_message_stm  = $this->pdo->prepare("SELECT * FROM trans_unit WHERE target = ? AND cat_id = ? LIMIT 1");
+    $select_message_stm  = $this->pdo->prepare("SELECT * FROM trans_unit WHERE source = ? AND cat_id = ? LIMIT 1");
     $insert_message_stm  = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target) VALUES (?, ?, ?)");
     
     foreach($this->getRequestedMessages() as $catalogue => $messages)
@@ -367,15 +365,15 @@ class sfMessageSource_mgMySQL extends sfMessageSource
       
       foreach($messages as $message)
       {
-        $result = $select_message_stm->execute(array($message['source'], $cat_id));
+        $select_message_stm->execute(array($message['source'], $cat_id));
         $trans_unit = $select_message_stm->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if(count($trans_unit) == 1)
         {
-            
+          
           continue;
         }
-  
+
         $insert_message_stm->execute(array($cat_id, $message['source'], $message['source']));
       }
     }
@@ -441,6 +439,6 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   
   public function getId()
   {
-    return md5(sfConfig::get('app_mgI18nPlugin_connection'));
+    return md5($this->source);
   }
 }

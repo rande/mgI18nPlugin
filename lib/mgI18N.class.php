@@ -11,7 +11,7 @@
 
 /**
  *
- * 
+ *
  * @package    mgI18nPlugin
  * @author     Thomas Rabaix <thomas.rabaix@soleoweb.com>
  * @version    SVN: $Id$
@@ -24,24 +24,24 @@ class mgI18N extends sfI18N
     parent::initialize($configuration, $cache, $options);
 
     $this->options['learning_mode']  = isset($this->options['learning_mode']) ? $this->options['learning_mode'] : false;
-    
+
     $this->configuration->loadHelpers(array('Text'));
   }
-  
+
   public function __destruct()
   {
     if($this->options['learning_mode'])
     {
-      // save only one debug mode
+      // save only on learning mode
       if(!$this->getMessageSource() instanceof sfMessageSource_mgMySQL)
       {
         throw new sfException('The message source must be an instance of sfMessageSource_mgMySQL');
       }
-      
+
       $this->getMessageSource()->save();
     }
   }
-    
+
   /**
    * Gets the translation for the given string
    *
@@ -53,19 +53,21 @@ class mgI18N extends sfI18N
    */
   public function __($string, $args = array(), $catalogue = 'messages')
   {
-    
+
+    $catalogue = $catalogue === null ? 'messages' : $catalogue;
+
     // get the translated message
-    // if the debug is on then the message will be prefixed and suffixed 
+    // if the debug is on then the message will be prefixed and suffixed
     $message = $this->getMessageFormat()->format($string, $args, $catalogue);
-    
+
     $catalogue = sprintf('%s.%s', $this->getMessageSource()->getApplicationName(), $catalogue );
 
     if(!sfConfig::get('mg_i18n_enabled'))
     {
-      
+
       return $message;
     }
-    
+
     $pseudo_string = $string;
     if($this->options['debug'])
     {
@@ -97,7 +99,7 @@ class mgI18N extends sfI18N
     // append the message, so it can be stored into the database
     $this->getMessageSource()->appendRequestedMessage($value, $catalogue);
 
-    return $pseudo_string;
+    return $pseudo_string != $message ?  $message : $pseudo_string;
   }
 
   /**
@@ -106,25 +108,20 @@ class mgI18N extends sfI18N
    */
   public function getRequestedMessages()
   {
-    
+
     return $this->getMessageSource()->getRequestedMessages();
   }
 
-  public function listenToChangeCultureEvent(sfEvent $event)
-  {
-    parent::listenToChangeCultureEvent($event);
-    $this->to_analyse = array();
-  }
-
-  public function listenToChangeActionEvent(sfEvent $event)
-  {
-    // change message source directory to our module
-    parent::listenToChangeActionEvent($event);
-  }
-  
+  /**
+   * return the language used in a given catalogue name
+   *
+   * @static
+   * @param  string $catalogue the catalogue name
+   * @return string language
+   */
   public static function getLanguage($catalogue)
   {
-    
+
     return substr($catalogue, strrpos($catalogue, '.') + 1);
   }
 }
