@@ -65,13 +65,12 @@ class mgI18N extends sfI18N
       
       return $message;
     }
-    
+
+    $pseudo_string = $string;
     if($this->options['debug'])
     {
-      
-      $string = $this->options['untranslated_prefix'].$string.$this->options['untranslated_suffix'];
+      $pseudo_string = $this->options['untranslated_prefix'].$string.$this->options['untranslated_suffix'];
     }
-
 
     $args = empty($args) ? array() : $args;
 
@@ -86,7 +85,7 @@ class mgI18N extends sfI18N
     }
     // end code from I18nHelper.php file
 
-    $pseudo_string = strtr($string, $args);
+    $pseudo_string = strtr($pseudo_string, $args);
 
     $value = array(
       'source'        => $string,
@@ -98,7 +97,7 @@ class mgI18N extends sfI18N
     // append the message, so it can be stored into the database
     $this->getMessageSource()->appendRequestedMessage($value, $catalogue);
 
-    return $message;
+    return $pseudo_string;
   }
 
   /**
