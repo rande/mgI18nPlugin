@@ -36,6 +36,14 @@
         <target>Catalogue</target>
       </trans-unit>
       <trans-unit id="1">
+        <source>header_target</source>
+        <target>Traduction</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_source</source>
+        <target>Source</target>
+      </trans-unit>
+      <trans-unit id="1">
         <source>header_targets</source>
         <target>Message</target>
       </trans-unit>

@@ -6,27 +6,27 @@
       <!-- swWidgetFormDoctrineSelectNestedSetPosition -->
       <trans-unit id="1">
         <source>title_translation</source>
-        <target>Translation</target>
+        <target>Übersetzungen</target>
       </trans-unit>
       <trans-unit id="1">
         <source>tabs_translation_current_page</source>
-        <target>Page</target>
+        <target>Seite</target>
       </trans-unit>      
       <trans-unit id="1">
         <source>tabs_translation_ajax_lib_application</source>
-        <target>Files</target>
+        <target>Dateien</target>
       </trans-unit>
       <trans-unit id="1">
         <source>tabs_translation_db</source>
-        <target>Stocked</target>
+        <target>Datenbank</target>
       </trans-unit>
       <trans-unit id="1">
         <source>label_hide_translated_page</source>
-        <target>Hide translated messages</target>
+        <target>Übersetzte Texte verstecken</target>
       </trans-unit>
       <trans-unit id="1">
         <source>tabs_translation_help</source>
-        <target>Help</target>
+        <target>Hilfe</target>
       </trans-unit>
       <trans-unit id="1">
         <source>label_filter_list</source>
@@ -34,39 +34,39 @@
       </trans-unit>
       <trans-unit id="1">
         <source>header_catalogue</source>
-        <target>Catalogue</target>
+        <target>Katalog</target>
       </trans-unit>
       <trans-unit id="1">
         <source>header_targets</source>
-        <target>Targets</target>
+        <target>Ziel</target>
       </trans-unit>
       <trans-unit id="1">
         <source>header_source</source>
-        <target>Source</target>
+        <target>Quelle</target>
       </trans-unit>
       <trans-unit id="1">
         <source>header_target</source>
-        <target>Target</target>
+        <target>Ziel</target>
       </trans-unit>
       <trans-unit id="1">
         <source>label_parameters</source>
-        <target>Parameters</target>
+        <target>Parameter</target>
       </trans-unit>
       <trans-unit id="1">
         <source>btn_save_translation</source>
-        <target>Save translation</target>
+        <target>Übersetzung speichern</target>
       </trans-unit>
       <trans-unit id="1">
         <source>legend_translations</source>
-        <target>Translations available</target>
+        <target>Übersetzung verfügbar</target>
       </trans-unit>
       <trans-unit id="1">
         <source>message_instruction</source>
         <target>
           <![CDATA[
-          1. Click on one item on the left table to see its current translations. <br />
-          2. Then you are free to edit the different translations to meet your requirements. <br />
-          3. <strong>save your translations !</strong>
+          1. Wähle einen Eintrag aus der linken Tabelle aus um seine aktuellen Übersetzungen zu sehen. <br />
+          2. Dann kannst du die einzelnen Übersetzungen bearbeiten. <br />
+          3. <strong>Speicher deine Übersetzung !</strong>
           ]]>
         </target>
       </trans-unit>
@@ -75,7 +75,7 @@
         <target>
            <![CDATA[
           Loading in progress ... <br />
-          <em>(this can take up to 20s.)</em>
+          <em>(Dies kann bis zu 20s dauern.)</em>
           ]]>
         </target>
       </trans-unit>
