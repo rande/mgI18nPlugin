@@ -90,14 +90,7 @@ class basemgI18nAdminActions extends sfActions
       $form->save();
 
       // allow to tweak the clear_cache method
-      $event = $this->getContext()->getEventDispatcher()->notifyUntil(new sfEvent($params, 'mgI18n.clear_cache'));
-
-      if(!$event->isProcessed())
-      {
-        chdir(sfConfig::get('sf_root_dir'));
-        $cc = new sfCacheClearTask($this->getContext()->getEventDispatcher(), new sfFormatter);
-        $cc->run(array(), array('--type=i18n'));
-      }
+      $this->getContext()->getEventDispatcher()->notifyUntil(new sfEvent($params, 'mgI18n.clear_cache'));
     }
     
     return sfView::NONE;

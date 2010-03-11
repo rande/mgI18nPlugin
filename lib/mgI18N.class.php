@@ -32,7 +32,7 @@ class mgI18N extends sfI18N
   {
     if($this->options['learning_mode'])
     {
-      // save only on debug mode
+      // save only on learning mode
       if(!$this->getMessageSource() instanceof sfMessageSource_mgMySQL)
       {
         throw new sfException('The message source must be an instance of sfMessageSource_mgMySQL');
@@ -112,6 +112,13 @@ class mgI18N extends sfI18N
     return $this->getMessageSource()->getRequestedMessages();
   }
 
+  /**
+   * return the language used in a given catalogue name
+   *
+   * @static
+   * @param  string $catalogue the catalogue name
+   * @return string language
+   */
   public static function getLanguage($catalogue)
   {
 
