@@ -54,6 +54,7 @@ class PluginmgI18nTargetsForm extends sfForm
     $cultures = sfConfig::get('app_mgI18nPlugin_cultures_available');
     $source   = $this->getValue('source');
     $targets  = $this->getValue('targets');
+    $date     = strtotime('now');
   
     // build the catalogue array
     $markers = array();
@@ -75,7 +76,7 @@ class PluginmgI18nTargetsForm extends sfForm
     $stm->execute(array_merge($catalogues, array($source)));
     
     // initialize the update query statement
-    $update_stm = $pdo->prepare("UPDATE trans_unit SET target = ? WHERE msg_id = ?");
+    $update_stm = $pdo->prepare("UPDATE trans_unit SET target = ?, date_modified = ? WHERE msg_id = ?");
     
     // update translation
     foreach($stm->fetchAll(PDO::FETCH_ASSOC) as $trans_unit)
@@ -85,7 +86,7 @@ class PluginmgI18nTargetsForm extends sfForm
       
       $target = $targets[$culture];
       
-      $update_stm->execute(array($target, $trans_unit['msg_id']));
+      $update_stm->execute(array($target, $date, $trans_unit['msg_id']));
       
       unset($cultures[$culture]);
     }

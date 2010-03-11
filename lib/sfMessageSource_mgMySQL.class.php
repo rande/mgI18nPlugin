@@ -322,11 +322,13 @@ class sfMessageSource_mgMySQL extends sfMessageSource
       return $this->informations[$catalogue]['cat_id'];
     }
     
+    $date = strtotime('now');
+     
     $catalogues = array();
     if($force_create)
     {
-      $insert_catalogue_stm  = $this->pdo->prepare("INSERT INTO catalogue (name) VALUES (?)");
-      $insert_catalogue_stm->execute(array($catalogue));
+      $insert_catalogue_stm  = $this->pdo->prepare("INSERT INTO catalogue (name, date_created) VALUES (?, ?)");
+      $insert_catalogue_stm->execute(array($catalogue, $date));
       
       $select_catalogue_stm = $this->pdo->prepare("SELECT cat_id FROM catalogue WHERE name = ?");
       $select_catalogue_stm->execute(array($catalogue));
@@ -349,9 +351,12 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   function save($catalogue = 'messages')
   {
     $select_message_stm  = $this->pdo->prepare("SELECT * FROM trans_unit WHERE source = ? AND cat_id = ? LIMIT 1");
-    $insert_message_stm  = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target) VALUES (?, ?, ?)");
+    $insert_message_stm  = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target, date_modified) VALUES (?, ?, ?, ?)");
     
-    foreach($this->getRequestedMessages() as $catalogue => $messages)
+    $date       = strtotime('now');
+    $catalogues = $this->getRequestedMessages();
+    $in_prepare = array();
+    foreach($catalogues as $catalogue => $messages)
     {
   
       if(!is_array($messages) || count($messages) == 0)
@@ -359,9 +364,11 @@ class sfMessageSource_mgMySQL extends sfMessageSource
         
         continue;
       }
-
+      
       $variant = $catalogue.'.'.$this->culture;
       $cat_id = $this->getCatalogueId($variant, true);
+      
+      $in_prepare[$cat_id] = '?';
       
       foreach($messages as $message)
       {
@@ -374,9 +381,16 @@ class sfMessageSource_mgMySQL extends sfMessageSource
           continue;
         }
 
-        $insert_message_stm->execute(array($cat_id, $message['source'], $message['source']));
+        $insert_message_stm->execute(array($cat_id, $message['source'], $message['source'], $date));
       }
     }
+    
+    if(count($in_prepare) > 0)
+    {
+      $update_stm = $this->pdo->prepare(sprintf("UPDATE catalogue SET date_modified = ? WHERE cat_id IN(%s)", implode(',', $in_prepare)));
+      $update_stm->execute(array_merge(array($date), array_keys($in_prepare)));
+    }
+    
   }
 
   /**
@@ -415,9 +429,10 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   {
     
     $cat_id = $this->getCatalogueId($catalogue);
+    $date   = strtotime('now');
     
-    $stm = $this->pdo->prepare("UPDATE trans_unit SET target = ? WHERE cat_id = ? AND source = ?");
-    $stm->execute(array($target, $cat_id, $text));
+    $stm = $this->pdo->prepare("UPDATE trans_unit SET target = ?, date_modified = ? WHERE cat_id = ? AND source = ?");
+    $stm->execute(array($target, $date, $cat_id, $text));
   }
   
   /**
@@ -429,12 +444,11 @@ class sfMessageSource_mgMySQL extends sfMessageSource
    */
   public function insert($source, $target, $comments, $catalogue = 'messages')
   {
-    
-    $stm = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target) VALUES (?, ?, ?)");
-    
+   
+    $stm    = $this->pdo->prepare("INSERT INTO trans_unit (cat_id, source, target, date_added) VALUES (?, ?, ?, ?)");    
     $cat_id = $this->getCatalogueId($catalogue, true);
     
-    return $stm->execute(array($cat_id, $source, $target));
+    return $stm->execute(array($cat_id, $source, $target, strtotime('now')));
   }
   
   public function getId()
