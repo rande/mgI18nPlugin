@@ -10,7 +10,7 @@
       <trans-unit id="1">
         <source>tabs_translation_current_page</source>
         <target>Page</target>
-      </trans-unit>
+      </trans-unit>      
       <trans-unit id="1">
         <source>tabs_translation_ajax_lib_application</source>
         <target>Fichiers</target>
@@ -36,6 +36,14 @@
         <target>Catalogue</target>
       </trans-unit>
       <trans-unit id="1">
+        <source>header_target</source>
+        <target>Traduction</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_source</source>
+        <target>Source</target>
+      </trans-unit>
+      <trans-unit id="1">
         <source>header_targets</source>
         <target>Message</target>
       </trans-unit>
@@ -50,10 +58,6 @@
       <trans-unit id="1">
         <source>legend_translations</source>
         <target>Traductions disponibles</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>title_instruction</source>
-        <target>Instructions</target>
       </trans-unit>
       <trans-unit id="1">
         <source>message_instruction</source>
