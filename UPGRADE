@@ -1,9 +1,6 @@
 UPGRADING FROM VERSION_0_0_6
 ----------------------------
 
- * With symfony 1.3 and 1.4 the yaml format does not accept the 'on' and 'off' value
-   You need to set 'true' or 'false'
-
  * The plugin can be used with Propel or Doctrine so you must update your factories files to
    set the name of the connection instead of the DSN information
    
@@ -25,3 +22,17 @@ UPGRADING FROM VERSION_0_0_6
  
    - mgI18n:xliff-import => i18n:mg-xliff-import
 
+ * remove old doctrine file
+ 
+   - svn rm lib/filter/doctrine/mgI18nPlugin
+   - svn rm lib/form/doctrine/mgI18nPlugin
+   - svn rm lib/model/doctrine/mgI18nPlugin
+ 
+ * import new translation
+   
+    ./symfony i18n:mg-xliff-import backend plugins/mgI18nPlugin/i18n/*  
+    ./symfony i18n:mg-xliff-import frontend plugins/mgI18nPlugin/i18n/*  
+    
+ * clear your cache
+ 
+ 
