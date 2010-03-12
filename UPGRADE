@@ -14,11 +14,25 @@ UPGRADING FROM VERSION_0_0_6
  * the GUI is now automatically added by the filter, so you have to remove all references
    of this code in your template files :
  
-      <?php if(sfConfig::get('mg_i18n_enabled')): ?>
-        <?php include_component('mgI18nAdmin', 'displayTranslationBox') ?>
-      <?php endif;?>
+        [php]
+        <?php if(sfConfig::get('mg_i18n_enabled')): ?>
+          <?php include_component('mgI18nAdmin', 'displayTranslationBox') ?>
+        <?php endif;?>
       
  * All tasks are now under the i18n namespace
  
    - mgI18n:xliff-import => i18n:mg-xliff-import
 
+ * remove old doctrine file (from fs and svn)
+        
+        svn rm lib/filter/doctrine/mgI18nPlugin
+        svn rm lib/form/doctrine/mgI18nPlugin
+        svn rm lib/model/doctrine/mgI18nPlugin
+ 
+ * import new translation
+   
+        ./symfony i18n:mg-xliff-import backend plugins/mgI18nPlugin/i18n/*  
+        ./symfony i18n:mg-xliff-import frontend plugins/mgI18nPlugin/i18n/*  
+    
+ * clear your cache
+ 
