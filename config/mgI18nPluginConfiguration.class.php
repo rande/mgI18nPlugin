@@ -27,13 +27,11 @@ class mgI18nPluginConfiguration extends sfPluginConfiguration
   {
     $context = $event->getSubject();
     
-    if ($context->getI18N())
+    if (!sfConfig::get('sf_i18n') || !$context->getI18N() instanceof mgI18n)
     {
-      $i18n_options = $context->getI18N()->getOptions();
-    }
-    else
-    {
-      throw new sfException('Please read the README file to install the plugin.');
+      sfConfig::set('mg_i18n_enabled', false);
+      
+      return;
     }
     
     sfConfig::set('mg_i18n_enabled', mgI18nUser::canTranslate($context));
