@@ -34,6 +34,8 @@ class mgI18nPluginConfiguration extends sfPluginConfiguration
       return;
     }
     
+    $i18n_options = $context->getI18N()->getOptions();
+    
     sfConfig::set('mg_i18n_enabled', mgI18nUser::canTranslate($context));
     sfConfig::set('mg_i18n_global_application', isset($i18n_options['global_application']) ? $i18n_options['global_application'] : $context->getConfiguration()->getApplication());
   }
