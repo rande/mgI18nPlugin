@@ -1,4 +1,8 @@
-version 0.0.7
+version 1.X.8
+  - fix severe bug with translation management
+  - update date_modified field when saved in database
+  
+version 1.X.7
   - remove Doctrine dependency 
   - merge lib, ajax and application tabs to one tab named 'Files'
   - add a new database tab, the user can now lookup the database for messages
