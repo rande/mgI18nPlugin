@@ -318,10 +318,9 @@ mgI18nPlugin.prototype.loadTranslationTable = function(name, mg_i18n_messages)
     {
       trans = catalogue[index];
 
-      html += "<tr catalogue='" + name_catalogue + "' source='" + trans.source + "' rel='" + name + "' class='_mg_i18_td_unselected " + (trans.is_translated ? 'mg-target-translated' : 'mg-target-non-translated') + "'>";
-      // html += "  <td hash='" + index + "'>"  + trans.target + '   (' + trans.source + ") </td>";
+      html += "<tr catalogue='" + name_catalogue + "' rel='" + name + "' class='_mg_i18_td_unselected " + (trans.is_translated ? 'mg-target-translated' : 'mg-target-non-translated') + "'>";
       html += "  <td hash='" + index + "'>"  + trans.target + "</td>";
-      html += "  <td><em>" + trans.source + "</em></td>";
+      html += "  <td><em class='source'>" + trans.source + "</em></td>";
       html += "</tr>";
     }
   }
@@ -354,7 +353,7 @@ mgI18nPlugin.prototype.loadTranslationTable = function(name, mg_i18n_messages)
       jQuery('textarea', '#mg-i18n-form-update').val('');
 
       var catalogue = tr.attr('catalogue');
-      var source    = tr.attr('source');
+      var source    = jQuery('em.source', tr).html();
       var hash      = jQuery(tds.get(0)).attr('hash');
       var i18n_params     = panel.messages[catalogue][hash]['params'];
 
