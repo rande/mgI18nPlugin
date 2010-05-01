@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<xliff version="1.0">
+  <file orginal="global" source-language="nl" datatype="plaintext">
+    <body>
+      <trans-unit id="1">
+        <source>title_translation</source>
+        <target>Vertaling</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_current_page</source>
+        <target>Deze pagina</target>
+      </trans-unit>      
+      <trans-unit id="1">
+        <source>tabs_translation_ajax_lib_application</source>
+        <target>Bestanden</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_db</source>
+        <target>Opgeslagen</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_hide_translated_page</source>
+        <target>Verberg vertaalde berichten</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>tabs_translation_help</source>
+        <target>Hulp</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_filter_list</source>
+        <target>Filter : </target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_catalogue</source>
+        <target>Cataloog</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_targets</source>
+        <target>Doelen</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_source</source>
+        <target>Bron</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>header_target</source>
+        <target>Doel</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>label_parameters</source>
+        <target>Parameters</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>btn_save_translation</source>
+        <target>Bewaar vertaling</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>legend_translations</source>
+        <target>Beschikbare vertalingen</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>message_instruction</source>
+        <target>
+          <![CDATA[
+          1. Klik op een item in de linker tabel om de huidige vertalingen te zien. <br />
+          2. Nadien kan je de vertalingen voor dit item naar believen aanpassen. <br />
+          3. <strong>Bewaar de aanpassingen!</strong>
+          ]]>
+        </target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>message_loading</source>
+        <target>
+           <![CDATA[
+          Inladen van berichten ... <br />
+          <em>(dit kan tot 20 seconden duren.)</em>
+          ]]>
+        </target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
