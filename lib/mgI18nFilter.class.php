@@ -40,6 +40,12 @@ class mgI18nFilter extends sfFilter
     if (false !== ($pos = strpos($content, '</body>')))
     {
 
+      // preload required helper
+      $this->context->getConfiguration()->loadHelpers(array(
+        'Partial',
+        'I18N'
+      ));
+      
       $html = '';
       $html .=  get_component('mgI18nAdmin', 'displayTranslationBox');
       $html .= "<script>\n";
