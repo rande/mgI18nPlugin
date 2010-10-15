@@ -274,8 +274,10 @@ class sfMessageSource_mgMySQL extends sfMessageSource
   
   public function getApplicationName()
   {
+    // sfConfig::get('mg_i18n_global_application') is not available yet
+    $i18n_options = sfContext::getInstance()->getI18N()->getOptions();
     
-    return sfConfig::get('mg_i18n_global_application', sfProjectConfiguration::getActive()->getApplication());
+    return $i18n_options['global_application']) ? $i18n_options['global_application'] : sfProjectConfiguration::getActive()->getApplication();
   }
   
   /**
