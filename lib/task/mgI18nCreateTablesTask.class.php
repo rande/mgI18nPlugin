@@ -45,20 +45,37 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-   
-    // define SQLs
-    $sqls = array(
-      "CREATE TABLE catalogue (cat_id BIGINT AUTO_INCREMENT, name VARCHAR(100), source_lang VARCHAR(100), target_lang VARCHAR(100), date_created BIGINT, date_modified BIGINT, author VARCHAR(255), PRIMARY KEY(cat_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB;",
-      "CREATE TABLE trans_unit (msg_id BIGINT AUTO_INCREMENT, cat_id BIGINT DEFAULT '1', source LONGTEXT, target LONGTEXT, comments LONGTEXT, date_added BIGINT DEFAULT 0, date_modified BIGINT DEFAULT 0, author VARCHAR(255), translated TINYINT(1), INDEX cat_id_idx (cat_id), PRIMARY KEY(msg_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB;",
-      "ALTER TABLE trans_unit ADD FOREIGN KEY (cat_id) REFERENCES catalogue(cat_id);",
-    );
-    
-    $this->logSection('install', 'Create tables');
-
     // retrieve the PDO object
     $manager  = new sfDatabaseManager($this->configuration);
     $database = $manager->getDatabase(sfConfig::get('app_mgI18nPlugin_connection'));
     $pdo = $database->getConnection();
+
+    // get the driver name
+    $driver = strtolower($pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
+
+    // define SQLs
+    switch ($driver)
+    {
+      case 'mysql':
+        $sqls = array(
+          "CREATE TABLE catalogue (cat_id BIGINT AUTO_INCREMENT, name VARCHAR(100), source_lang VARCHAR(100), target_lang VARCHAR(100), date_created BIGINT, date_modified BIGINT, author VARCHAR(255), PRIMARY KEY(cat_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB;",
+          "CREATE TABLE trans_unit (msg_id BIGINT AUTO_INCREMENT, cat_id BIGINT DEFAULT '1', source LONGTEXT, target LONGTEXT, comments LONGTEXT, date_added BIGINT DEFAULT 0, date_modified BIGINT DEFAULT 0, author VARCHAR(255), translated TINYINT(1), INDEX cat_id_idx (cat_id), PRIMARY KEY(msg_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB;",
+          "ALTER TABLE trans_unit ADD FOREIGN KEY (cat_id) REFERENCES catalogue (cat_id);",
+        );
+        break;
+      case 'pgsql':
+        $sqls = array(
+          "CREATE TABLE catalogue (cat_id bigserial, name character varying(100), source_lang character varying(100), target_lang character varying(100), date_created bigint, date_modified bigint, author character varying(255), PRIMARY KEY (cat_id));",
+          "CREATE TABLE trans_unit (msg_id bigserial, cat_id bigint DEFAULT 1, source text, target text, comments text, date_added bigint DEFAULT 0, date_modified bigint DEFAULT 0, author character varying(255), translated boolean, PRIMARY KEY (msg_id));",
+          "ALTER TABLE trans_unit ADD FOREIGN KEY (cat_id) REFERENCES catalogue (cat_id) ON UPDATE NO ACTION ON DELETE NO ACTION;",
+        );
+        break;
+      default:
+        throw new sfException('Queries are not defined for "'.$driver.'" driver!');
+        break;
+    }
+
+    $this->logSection('install', 'Create tables');
 
     // execute queries
     $pdo->exec('START TRANSACTION');
