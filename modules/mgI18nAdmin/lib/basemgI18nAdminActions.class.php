@@ -36,15 +36,18 @@ class basemgI18nAdminActions extends sfActions
     }
     
     $values[] = $source;
-    
-    $sql = sprintf("
-      SELECT tc.name as tc_name, tc.source_lang as tc_culture, tu.target as tu_target
-      FROM trans_unit tu 
-      LEFT JOIN catalogue as tc ON tc.cat_id = tu.cat_id 
-      WHERE 
-        tc.name IN (%s) 
-        AND tu.source = ?
-    ", implode(', ', $markers));
+
+    $sql = <<<SQL
+SELECT tc.name as tc_name, tc.source_lang as tc_culture, tu.target as tu_target
+FROM %s tu
+LEFT JOIN %s as tc ON tc.cat_id = tu.cat_id
+WHERE tc.name IN (%s) AND tu.source = ? 
+SQL;
+
+    $sql = sprintf($sql, mgI18nPluginConfiguration::getTableName('trans_unit'),
+      mgI18nPluginConfiguration::getTableName('catalogue'),
+      implode(', ', $markers)
+    );
     
     $stm = $pdo->prepare($sql);
     $stm->execute($values);
@@ -142,13 +145,17 @@ class basemgI18nAdminActions extends sfActions
     else if($type == 'database')
     {
       $message = '%'.$request->getParameter('message').'%';
-      
-      $stm = $pdo->prepare("
-        SELECT DISTINCT tc.name tc_name, tu.target tu_target, tu.source tu_source
-        FROM trans_unit tu
-        LEFT JOIN catalogue tc ON tu.cat_id = tc.cat_id
-        WHERE target LIKE ? OR source LIKE ?"
-      );
+
+      $sql = <<<SQL
+SELECT DISTINCT tc.name tc_name, tu.target tu_target, tu.source tu_source
+FROM %s tu
+LEFT JOIN %s tc ON tu.cat_id = tc.cat_id
+WHERE target LIKE ? OR source LIKE ?
+SQL;
+
+      $stm = $pdo->prepare(sprintf($sql, mgI18nPluginConfiguration::getTableName('trans_unit'),
+        mgI18nPluginConfiguration::getTableName('catalogue')
+      ));
       
       $stm->execute(array($message, $message));
       

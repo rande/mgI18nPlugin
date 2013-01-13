@@ -59,18 +59,25 @@ class PluginmgI18nTargetsForm extends sfForm
     }
     
     // get current translation for the current source
-    $sql = sprintf("
-      SELECT tu.msg_id, tu.cat_id, tu.target, tc.name as tc_name
-      FROM trans_unit tu 
-      LEFT JOIN catalogue as tc ON tc.cat_id = tu.cat_id 
-      WHERE tc.name IN (%s) AND tu.source = ?", implode(', ', $markers));
+    $sql = <<<SQL
+SELECT tu.msg_id, tu.cat_id, tu.target, tc.name as tc_name
+FROM %s tu
+LEFT JOIN %s as tc ON tc.cat_id = tu.cat_id
+WHERE tc.name IN (%s) AND tu.source = ?
+SQL;
+
+    $sql = sprintf($sql, mgI18nPluginConfiguration::getTableName('trans_unit'),
+      mgI18nPluginConfiguration::getTableName('catalogue'), implode(', ', $markers)
+    );
     
     $pdo = $this->getOption('message_source')->getConnection();
     $stm = $pdo->prepare($sql);
     $stm->execute(array_merge($catalogues, array($source)));
     
     // initialize the update query statement
-    $update_stm = $pdo->prepare("UPDATE trans_unit SET target = ? WHERE msg_id = ?");
+    $update_stm = $pdo->prepare(sprintf("UPDATE %s SET target = ? WHERE msg_id = ?",
+      mgI18nPluginConfiguration::getTableName('trans_unit')
+    ));
     
     // update translation
     foreach($stm->fetchAll(PDO::FETCH_ASSOC) as $trans_unit)

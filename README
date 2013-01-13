@@ -35,13 +35,16 @@ Installation
                   lifetime:                  86400
                   prefix:                    %SF_APP_DIR%
 
- * you can change the default doctrine connection's name by editing your app.yml file
+ * you can change the default doctrine connection's name by editing your app.yml file. You can also customize tables names to fit your needs.
 
         [yml]
         all:
           # ...
           mgI18nPlugin:
             connection: doctrine
+            tables:
+              trans_unit: my_trans_unit_table
+              catalogue: my_catalogue_table
             cultures_available: 
               fr: Français
               en: English
