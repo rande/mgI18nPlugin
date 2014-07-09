@@ -178,7 +178,7 @@ class basemgI18nAdminActions extends sfActions
       }
       $original_catalogue = ($message['catalogue'] ? $message['catalogue'] : 'messages');
    
-      $catalogue = $this->getContext()->getConfiguration()->getApplication().'.'.$original_catalogue;
+      $catalogue = sfConfig::get('mg_i18n_global_application') . '.'.$original_catalogue;
       
       if(!array_key_exists($catalogue, $valid_messages))
       {
